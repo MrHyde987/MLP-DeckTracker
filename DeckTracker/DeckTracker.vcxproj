@@ -87,6 +87,7 @@
     <ClInclude Include="PlayableCard.h" />
     <ClInclude Include="Problem.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SafeStringConversion.h" />
     <ClInclude Include="TroubleMaker.h" />
   </ItemGroup>
   <ItemGroup>
@@ -99,6 +100,7 @@
     <ClCompile Include="PlayableCard.cpp" />
     <ClCompile Include="Problem.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="SafeStringConversion.cpp" />
     <ClCompile Include="TroubleMaker.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

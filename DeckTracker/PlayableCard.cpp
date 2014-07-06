@@ -1,5 +1,7 @@
 #include "PlayableCard.h"
 
+PlayableCard::PlayableCard() {}
+
 PlayableCard::PlayableCard(
 	Colour colour,
 	int power,
@@ -18,4 +20,12 @@ Colour PlayableCard::accessColour() {
 
 int PlayableCard::accessPower() {
 	return power;
+}
+
+void PlayableCard::modifyColour(Colour newColour) {
+	colour = newColour;
+}
+
+void PlayableCard::modifyPower(int newPower) {
+	power = newPower;
 }

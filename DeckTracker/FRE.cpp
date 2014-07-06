@@ -1,5 +1,7 @@
 #include "FRE.h"
 
+FRE::FRE() {}
+
 FRE::FRE(
 	int actionCost,
 	int developmentCost,
@@ -20,4 +22,12 @@ int FRE::accessActionCost() {
 
 int FRE::accessDevelopmentCost() {
 	return developmentCost;
+}
+
+void FRE::modifyActionCost(int newAC) {
+	actionCost = newAC;
+}
+
+void FRE::modifyDevelopmentCost(int newDC) {
+	developmentCost = newDC;
 }

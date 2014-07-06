@@ -1,4 +1,5 @@
-
+#ifndef _PLAYABLE_CARD_
+#define _PLAYABLE_CARD_
 #include "Card.h"
 
 class PlayableCard : public Card {
@@ -9,6 +10,8 @@ private:
 
 public:
 
+	PlayableCard();
+
 	PlayableCard(Colour colour, int power, std::string name, std::string text);
 	
 	// Abstract Class
@@ -17,4 +20,8 @@ public:
 protected:
 	Colour accessColour();
 	int accessPower();
+
+	void modifyColour(Colour newColour);
+	void modifyPower(int newPower);
 };
+#endif // _PLAYABLE_CARD_
