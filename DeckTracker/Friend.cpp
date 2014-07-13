@@ -6,16 +6,14 @@ Friend::Friend() {}
 
 Friend::Friend(
 	Species species,
-	std::string typeModifiers,
 	int actionCost,
 	int developmentCost,
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {
+	string name,
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {
 
 	this->species = species;
-	this->typeModifiers = typeModifiers;
 }
 
 Friend::~Friend() {}
@@ -23,21 +21,21 @@ Friend::~Friend() {}
 void Friend::printStats() {
 
 	// TODO: Test this to see if it overflows the line. -> It does.
-	std::cout << boost::format("%1%  Action Cost:%2% Colour:%3% Colour Cost:%4% Power:%5% Species:%6% Types:%7%") 
+	std::cout << boost::format("%1%  Action Cost:%2% Colour:%3% Colour Cost:%4% Power:%5% Species:%6%") 
 		% accessName() % accessActionCost() % accessColour()
-		% accessDevelopmentCost() % accessPower() % species % typeModifiers << std::endl;
+		% accessDevelopmentCost() % accessPower() % species  << std::endl;
 }
 
 void Friend::formatPrompt() {
 	cout << "For Friends, please use the following input format:" << endl;
-	cout << "[Name],[Colour],[Species],[Type Modifiers, ,...],[Action Cost],[Colour Cost],[Power],[Special Text]" << endl;
+	cout << "[Name],[Colour],[Species],[Action Cost],[Colour Cost],[Power],[Special Text]" << endl;
 }
 
 bool Friend::validateInput(vector<string> input) {
 
 	bool validityFlag = false;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Friend." << endl;
 		return false;
 	}
@@ -96,11 +94,15 @@ void Friend::buildCard(vector<string> formattedInput) {
 	modifyName(formattedInput[0]);
 	modifyColour(Card::intToColour(SafeStringConversion::stringToInt(formattedInput[1])));
 	species = intToSpecies(SafeStringConversion::stringToInt(formattedInput[2]));
-	typeModifiers = formattedInput[3];
-	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[4]));
-	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[5]));
-	modifyPower(SafeStringConversion::stringToInt(formattedInput[6]));
-	modifySpecialText(formattedInput[7]);
+	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[3]));
+	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[4]));
+	modifyPower(SafeStringConversion::stringToInt(formattedInput[5]));
+	// All further strings treated as special text strings.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 }
 
 Species Friend::intToSpecies(int toSpecies) {

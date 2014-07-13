@@ -8,7 +8,7 @@ Card::Card() {}
 // NOTE: Even though the dynamic "card-building" methods will not
 // make use of these constructors, they will be important for reading
 // cards from deck and manifest files later on.
-Card::Card(std::string name, std::string specialText) {
+Card::Card(string name, vector<string> specialText) {
 
 	frequency = 1;
 	this->name = name;
@@ -33,7 +33,7 @@ string Card::accessName() {
 	return name;
 }
 
-string Card::accessSpecialText() {
+vector<string> Card::accessSpecialText() {
 	return specialText;
 }
 
@@ -41,7 +41,7 @@ void Card::modifyName(string newName) {
 	name = newName;
 }
 
-void Card::modifySpecialText(string newText) {
+void Card::modifySpecialText(vector<string> newText) {
 	specialText = newText;
 }
 

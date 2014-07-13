@@ -10,8 +10,8 @@ Event::Event(
 	int developmentCost,
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {}
+	string name,
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {}
 
 Event::~Event() {}
 
@@ -24,7 +24,7 @@ bool Event::validateInput(vector<string> input) {
 
 	bool validityFlag = true;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Event." << endl;
 		return false;
 	}
@@ -70,7 +70,12 @@ void Event::buildCard(vector<string> formattedInput) {
 	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[2]));
 	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
-	modifySpecialText(formattedInput[5]);
+	// All further strings treated as special text.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 
 }
 

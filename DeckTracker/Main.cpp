@@ -166,7 +166,7 @@ void testAddCards() {
 
 int main() {
 
-	std::cout << "MLP DeckTracker version 0.2.0" << std::endl;
+	std::cout << "MLP DeckTracker version 0.2.1" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
 	testAddCards();

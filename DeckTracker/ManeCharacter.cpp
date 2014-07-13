@@ -9,8 +9,8 @@ ManeCharacter::ManeCharacter(
 	int flippedPower,
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : PlayableCard(colour, power, name, specialText) {
+	string name,
+	vector<string> specialText) : PlayableCard(colour, power, name, specialText) {
 
 	this->flipCondition = flipCondition;
 	this->flippedPower = flippedPower;
@@ -33,7 +33,7 @@ bool ManeCharacter::validateInput(vector<string> input) {
 
 	bool validityFlag = true;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Mane Character." << endl;
 		return false;
 	}
@@ -75,5 +75,10 @@ void ManeCharacter::buildCard(vector<string> formattedInput) {
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[2]));
 	flippedPower = SafeStringConversion::stringToInt(formattedInput[3]);
 	flipCondition = formattedInput[4];
-	modifySpecialText(formattedInput[5]);
+	// All further strings treated as (flipped) special text / type modifiers.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 }

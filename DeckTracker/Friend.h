@@ -20,10 +20,7 @@ class Friend : public FRE {
 
 private:
 	Species species;
-	const static int NUM_PROPERTIES = 8;
-
-	// TODO: String or collection of strings? For the moment, keep a string
-	string typeModifiers;
+	const static int NUM_PROPERTIES = 7;
 
 	static Species intToSpecies(int toSpecies);
 
@@ -31,13 +28,12 @@ public:
 	Friend();
 	Friend(
 		Species species,
-		std::string typeModifiers,
 		int actionCost,
 		int developmentCost,
 		Colour colour,
 		int power,
 		string name,
-		string specialText);
+		vector<string> specialText);
 
 	~Friend();
 

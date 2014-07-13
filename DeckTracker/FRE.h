@@ -18,8 +18,8 @@ public:
 		int developmentCost,
 		Colour colour,
 		int power,
-		std::string name,
-		std::string specialText);
+		string name,
+		vector<string> specialText);
 	// Abstract class
 	virtual ~FRE();
 

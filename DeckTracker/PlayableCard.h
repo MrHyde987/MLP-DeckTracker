@@ -12,7 +12,7 @@ public:
 
 	PlayableCard();
 
-	PlayableCard(Colour colour, int power, std::string name, std::string text);
+	PlayableCard(Colour colour, int power, string name, vector<string> text);
 	
 	// Abstract Class
 	virtual ~PlayableCard();

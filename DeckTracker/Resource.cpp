@@ -10,8 +10,8 @@ Resource::Resource(
 	int developmentCost,
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {
+	string name,
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {
 
 	this->location = location;
 }
@@ -34,7 +34,7 @@ bool Resource::validateInput(vector<string> input) {
 
 	bool validityFlag = false;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Resource." << endl;
 		return false;
 	}
@@ -96,7 +96,12 @@ void Resource::buildCard(vector<string> formattedInput) {
 	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
 	location = intToLocation(SafeStringConversion::stringToInt(formattedInput[5]));
-	modifySpecialText(formattedInput[6]);
+	// All further strings treated as special text.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 }
 
 Location Resource::intToLocation(int toConvert) {
@@ -118,6 +123,12 @@ Location Resource::intToLocation(int toConvert) {
 			break;
 		case(4) :
 			newLocation = LOCATION_PROBLEM;
+			break;
+		case(5) :
+			newLocation = LOCATION_MC;
+			break;
+		case(6) :
+			newLocation = LOCATION_OPPOSING_MC;
 			break;
 		default:
 			newLocation = LOCATION_INVALID;

@@ -18,7 +18,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
-		string text);
+		vector<string> text);
 
 	~TroubleMaker();
 

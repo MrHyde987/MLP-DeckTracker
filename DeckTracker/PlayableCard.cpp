@@ -5,8 +5,8 @@ PlayableCard::PlayableCard() {}
 PlayableCard::PlayableCard(
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : Card(name, specialText) {
+	string name,
+	vector<string> specialText) : Card(name, specialText) {
 
 	this->colour = colour;
 	this->power = power;

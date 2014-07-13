@@ -13,8 +13,8 @@ Problem::Problem(
 	int primaryColourConfrontCost,
 	int secondaryColourConfrontCost,
 	bool isStarting,
-	std::string name,
-	std::string specialText) : Card(name, specialText) {
+	string name,
+	vector<string> specialText) : Card(name, specialText) {
 
 	this->pointBonus = pointBonus;
 	this->neutralConfrontCost = neutralConfrontCost;
@@ -48,7 +48,7 @@ bool Problem::validateInput(vector<string> input) {
 
 	bool validityFlag = true;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Problem." << endl;
 		return false;
 	}
@@ -128,5 +128,10 @@ void Problem::buildCard(vector<string> formattedInput) {
 	secondaryColour = Card::intToColour(SafeStringConversion::stringToInt(formattedInput[5]));
 	secondaryColourConfrontCost = SafeStringConversion::stringToInt(formattedInput[6]);
 	neutralConfrontCost = SafeStringConversion::stringToInt(formattedInput[7]);
-	modifySpecialText(formattedInput[8]);
+	// All further strings treated as special Text.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 }

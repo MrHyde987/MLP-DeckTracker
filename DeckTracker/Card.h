@@ -24,11 +24,11 @@ class Card {
 private:
 	int frequency;
 	string name;
-	string specialText;
+	vector<string> specialText;
 
 public:
 	Card();
-	Card(string name, string text);
+	Card(string name, vector<string> text);
 	
 	// Abstract Class
 	virtual void printStats() = 0;
@@ -39,11 +39,13 @@ public:
 	void incrementFrequency();
 	void decrementFrequency();
 
+	// TODO: Add == comparator operator (compare the names to determin equality)
+
 protected:
 	string accessName();
-	string accessSpecialText();
+	vector<string> accessSpecialText();
 	void modifyName(string newName);
-	void modifySpecialText(string newText);
+	void modifySpecialText(vector<string> newText);
 
 	static Colour intToColour(int toConvert);
 };

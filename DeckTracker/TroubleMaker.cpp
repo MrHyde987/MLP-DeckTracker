@@ -9,8 +9,8 @@ TroubleMaker::TroubleMaker(
 	bool isVillain,
 	Colour colour,
 	int power,
-	std::string name,
-	std::string specialText) : PlayableCard(colour, power, name, specialText) {
+	string name,
+	vector<string> specialText) : PlayableCard(colour, power, name, specialText) {
 
 	this->pointValue = pointValue;
 	this->isVillain = isVillain;
@@ -33,7 +33,7 @@ bool TroubleMaker::validateInput(vector<string> input) {
 
 	bool validityFlag = false;
 
-	if (input.size() != NUM_PROPERTIES) {
+	if (input.size() < NUM_PROPERTIES) {
 		cout << "ERROR: Invalid number of arguments passed to Trouble Maker." << endl;
 		return false;
 	}
@@ -72,5 +72,11 @@ void TroubleMaker::buildCard(vector<string> formattedInput) {
 	isVillain = SafeStringConversion::stringToBool(formattedInput[2]);
 	modifyColour(COLOUR_NONE);
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[3]));
-	modifySpecialText(formattedInput[4]);
+	
+	// All remaining strings are treated as special text identifiers.
+	vector<string> specialText;
+	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
+		specialText.push_back(formattedInput[i]);
+	}
+	modifySpecialText(specialText);
 }

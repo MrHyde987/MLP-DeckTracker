@@ -28,8 +28,8 @@ public:
 		int primaryColourConfrontCost,
 		int secondaryColourConfrontCost,
 		bool isStarting,
-		std::string name,
-		std::string specialText);
+		string name,
+		vector<string> specialText);
 
 	~Problem();
 

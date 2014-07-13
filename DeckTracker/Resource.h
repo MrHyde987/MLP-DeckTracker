@@ -9,7 +9,9 @@ typedef enum {
 	LOCATION_FRIEND,
 	LOCATION_OPPOSING_FRIEND,
 	LOCATION_TM,
-	LOCATION_PROBLEM
+	LOCATION_PROBLEM,
+	LOCATION_MC,
+	LOCATION_OPPOSING_MC
 
 } Location;
 
@@ -31,7 +33,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
-		string specialText);
+		vector<string> specialText);
 
 	~Resource();
 

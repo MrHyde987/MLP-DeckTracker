@@ -14,7 +14,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
-		string specialText);
+		vector<string> specialText);
 
 	~Event();
 
