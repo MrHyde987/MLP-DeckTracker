@@ -1,31 +1,5 @@
 
-#include "TroubleMaker.h"
-#include "ManeCharacter.h"
-#include "Friend.h"
-#include "Resource.h"
-#include "Event.h"
-#include "Problem.h"
-
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <string>
-
-#include "boost/tokenizer.hpp"
-
-using namespace std;
-
-typedef enum {
-
-	MODE_NOT_SET,
-	MODE_TM,
-	MODE_MC,
-	MODE_FRIEND,
-	MODE_RESOURCE,
-	MODE_EVENT,
-	MODE_PROBLEM
-
-} Mode;
+#include "Main.h"
 
 vector<string> &split(string &s, char delim, vector<string> &elems) {
 	stringstream ss(s);
@@ -49,11 +23,11 @@ void testInput() {
 void testAddCards() {
 
 	string cardInput;
-	Mode mode = MODE_NOT_SET;
 	bool newModeSelected = false;
 	bool cardInputSuccess = false;
 
-	vector<Card*> cardWorkingSet;
+	CardSet cardWorkingSet;
+	Card* newCard;
 	vector<string> cardArgs;
 
 	cout << "Let's add some cards" << endl;
@@ -112,50 +86,51 @@ void testAddCards() {
 			cardArgs.clear();
 			cardArgs = split(cardInput, ',', cardArgs);
 
-			// Hooray for polymorphism!
 			switch (mode) {
 
 				case(MODE_TM) :
 					cardInputSuccess = TroubleMaker::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new TroubleMaker);
+						newCard = new TroubleMaker;
 					}
 					break;
 				case(MODE_MC) :
 					cardInputSuccess = ManeCharacter::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new ManeCharacter);
+						newCard = new ManeCharacter;
 					}
 					break;
 				case(MODE_FRIEND) :
 					cardInputSuccess = Friend::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new Friend);
+						newCard = new Friend;
 					}
 					break;
 				case(MODE_RESOURCE) :
 					cardInputSuccess = Resource::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new Resource);
+						newCard = new Resource;
 					}
 					break;
 				case(MODE_EVENT) :
 					cardInputSuccess = Event::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new Event);
+						newCard = new Event;
 					}
 					break;
 				case(MODE_PROBLEM) :
 					cardInputSuccess = Problem::validateInput(cardArgs);
 					if (cardInputSuccess) {
-						cardWorkingSet.push_back(new Problem);
+						newCard = new Problem;
 					}
 					break;
 			}
 
+			// Hooray for polymorphism!
 			if (cardInputSuccess) {
 				cout << "Card added successfully!" << endl;
-				cardWorkingSet[cardWorkingSet.size() - 1]->buildCard(cardArgs);
+				newCard->buildCard(cardArgs);
+				cardWorkingSet.insert(newCard, mode);
 			}
 		}
 

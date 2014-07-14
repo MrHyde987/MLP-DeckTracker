@@ -39,7 +39,8 @@ public:
 	void incrementFrequency();
 	void decrementFrequency();
 
-	// TODO: Add == comparator operator (compare the names to determin equality)
+	// TODO: Add == comparator operator (compare the names to determine equality)
+	bool operator==(Card* toCompare);
 
 protected:
 	string accessName();
