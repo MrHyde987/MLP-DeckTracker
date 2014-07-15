@@ -8,7 +8,7 @@ bool SafeStringConversion::checkIsInt(string in) {
 	// Ints may start with a '-' for negative
 	// Other characters must be digits, and so fall within
 	// the ASCII range 48-57
-	int i = 0;
+	unsigned int i = 0;
 	bool retVal = true;
 	bool isNegative = false;
 	int tempResult = 0;
@@ -46,7 +46,7 @@ int SafeStringConversion::stringToInt(string in) {
 	// Ints may start with a '-' for negative
 	// Other characters must be digits, and so fall within
 	// the ASCII range 48-57
-	int i = 0;
+	unsigned int i = 0;
 	bool isNegative = false;
 	int tempResult = 0;
 
@@ -116,4 +116,26 @@ float SafeStringConversion::stringToFloat(string in) {
 	// TODO: This method is not needed for the present application, and is
 	// a trickier problem after all, so I will work on it later.
 	return false;
+}
+
+// Replaces ASCII capitals with ASCII lowercase.
+// Ignores non-letter characters.
+void SafeStringConversion::toLowerCase(string &in) {
+
+	for (unsigned int i = 0; i < in.length(); ++i) {
+		if (in[i] >= 65 && in[i] <= 90) {
+			in[i] += 32;
+		}
+	}
+}
+
+// Replaces ASCII lowercase letters with ASCII capitals.
+// Ignores non-letter characters.
+void SafeStringConversion::toUpperCase(string &in) {
+
+	for (unsigned int i = 0; i < in.length(); ++i) {
+		if (in[i] >= 97 && in[i] <= 122) {
+			in[i] -= 32;
+		}
+	}
 }

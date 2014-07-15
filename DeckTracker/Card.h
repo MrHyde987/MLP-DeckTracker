@@ -48,7 +48,7 @@ protected:
 	void modifyName(string newName);
 	void modifySpecialText(vector<string> newText);
 
-	static Colour intToColour(int toConvert);
+	static Colour stringToColour(string toConvert);
 };
 
 #endif // ndef _CARD_

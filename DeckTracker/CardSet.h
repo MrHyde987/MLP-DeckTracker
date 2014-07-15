@@ -8,8 +8,6 @@
 class Card;
 using namespace std;
 
-extern Mode mode;
-
 // The purpose of the CardSet class is to provide an abstraction
 // of the program's working set of cards as one big array, when in
 // fact the cards are being stored in several vectors for the purpose

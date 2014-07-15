@@ -40,11 +40,8 @@ bool Resource::validateInput(vector<string> input) {
 	}
 
 	// Proper colour
-	Colour prospectiveColour = COLOUR_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[1]);
+	Colour prospectiveColour = Card::stringToColour(input[1]);
 
-	if (validityFlag)
-		prospectiveColour = Card::intToColour(SafeStringConversion::stringToInt(input[1]));
 	if (prospectiveColour == COLOUR_INVALID) {
 		cout << "ERROR: Invalid colour passed to Resource." << endl;
 		return false;
@@ -75,11 +72,8 @@ bool Resource::validateInput(vector<string> input) {
 	}
 
 	// Location
-	Location prospectiveLocation = LOCATION_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[5]);
+	Location prospectiveLocation = stringToLocation(input[5]);
 
-	if (validityFlag)
-		prospectiveLocation = intToLocation(SafeStringConversion::stringToInt(input[5]));
 	if (prospectiveLocation == LOCATION_INVALID) {
 		cout << "ERROR: Invalid location passed to Resource." << endl;
 		return false;
@@ -91,11 +85,11 @@ bool Resource::validateInput(vector<string> input) {
 void Resource::buildCard(vector<string> formattedInput) {
 
 	modifyName(formattedInput[0]);
-	modifyColour(Card::intToColour(SafeStringConversion::stringToInt(formattedInput[1])));
+	modifyColour(Card::stringToColour(formattedInput[1]));
 	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[2]));
 	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
-	location = intToLocation(SafeStringConversion::stringToInt(formattedInput[5]));
+	location = stringToLocation(formattedInput[5]);
 	// All further strings treated as special text.
 	vector<string> specialText;
 	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
@@ -104,36 +98,27 @@ void Resource::buildCard(vector<string> formattedInput) {
 	modifySpecialText(specialText);
 }
 
-Location Resource::intToLocation(int toConvert) {
+Location Resource::stringToLocation(string toConvert) {
 
 	Location newLocation;
-
-	switch (toConvert) {
-		case(0) :
-			newLocation = LOCATION_HOME;
-			break;
-		case(1) :
-			newLocation = LOCATION_FRIEND;
-			break;
-		case(2) :
-			newLocation = LOCATION_OPPOSING_FRIEND;
-			break;
-		case(3) :
-			newLocation = LOCATION_TM;
-			break;
-		case(4) :
-			newLocation = LOCATION_PROBLEM;
-			break;
-		case(5) :
-			newLocation = LOCATION_MC;
-			break;
-		case(6) :
-			newLocation = LOCATION_OPPOSING_MC;
-			break;
-		default:
-			newLocation = LOCATION_INVALID;
-			break;
-	}
+	SafeStringConversion::toLowerCase(toConvert);
+	
+	if (toConvert.compare("home") == 0)
+		newLocation = LOCATION_HOME;
+	else if (toConvert.compare("friend") == 0)
+		newLocation = LOCATION_FRIEND;
+	else if (toConvert.compare("opposing friend") == 0)
+		newLocation = LOCATION_OPPOSING_FRIEND;
+	else if (toConvert.compare("trouble maker") == 0)
+		newLocation = LOCATION_TM;
+	else if (toConvert.compare("problem") == 0)
+		newLocation = LOCATION_PROBLEM;
+	else if (toConvert.compare("mane character") == 0)
+		newLocation = LOCATION_MC;
+	else if (toConvert.compare("opposing mane character") == 0)
+		newLocation = LOCATION_OPPOSING_MC;
+	else
+		newLocation = LOCATION_INVALID;
 
 	return newLocation;
 }

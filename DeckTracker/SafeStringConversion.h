@@ -25,5 +25,10 @@ public:
 	static int stringToInt(string in);
 	static bool stringToBool(string in);
 	static float stringToFloat(string in);
+
+	// Various other utility functions
+	// TODO: Refactor this! These should go in some utility class
+	static void toLowerCase(string &in);
+	static void toUpperCase(string &in);
 };
 #endif // _SSC_

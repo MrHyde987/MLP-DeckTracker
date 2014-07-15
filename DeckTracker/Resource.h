@@ -22,7 +22,7 @@ private:
 	
 	const static int NUM_PROPERTIES = 7;
 
-	static Location intToLocation(int toConvert);
+	static Location stringToLocation(string toConvert);
 
 public:
 	Resource();

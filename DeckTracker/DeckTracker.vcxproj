@@ -80,9 +80,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CardSet.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FRE.h" />
     <ClInclude Include="Friend.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="ManeCharacter.h" />
     <ClInclude Include="PlayableCard.h" />
     <ClInclude Include="Problem.h" />
@@ -92,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardSet.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="FRE.cpp" />
     <ClCompile Include="Friend.cpp" />

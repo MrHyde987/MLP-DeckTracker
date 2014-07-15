@@ -41,22 +41,16 @@ bool Friend::validateInput(vector<string> input) {
 	}
 
 	// Proper colour
-	Colour prospectiveColour = COLOUR_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[1]);
+	Colour prospectiveColour = Card::stringToColour(input[1]);
 
-	if (validityFlag)
-		prospectiveColour = Card::intToColour(SafeStringConversion::stringToInt(input[1]));
 	if (prospectiveColour == COLOUR_INVALID) {
 		cout << "ERROR: Invalid colour passed to Friend." << endl;
 		return false;
 	}
 
 	// Species
-	Species prospectiveSpecies = SPECIES_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[2]);
+	Species prospectiveSpecies = stringToSpecies(input[2]);
 
-	if (validityFlag)
-		prospectiveSpecies = intToSpecies(SafeStringConversion::stringToInt(input[2]));
 	if (prospectiveSpecies == SPECIES_INVALID) {
 		cout << "ERROR: Invalid speices passed to Friend." << endl;
 		return false;
@@ -92,8 +86,8 @@ bool Friend::validateInput(vector<string> input) {
 void Friend::buildCard(vector<string> formattedInput) {
 
 	modifyName(formattedInput[0]);
-	modifyColour(Card::intToColour(SafeStringConversion::stringToInt(formattedInput[1])));
-	species = intToSpecies(SafeStringConversion::stringToInt(formattedInput[2]));
+	modifyColour(Card::stringToColour(formattedInput[1]));
+	species = stringToSpecies(formattedInput[2]);
 	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[3]));
 	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[4]));
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[5]));
@@ -105,39 +99,29 @@ void Friend::buildCard(vector<string> formattedInput) {
 	modifySpecialText(specialText);
 }
 
-Species Friend::intToSpecies(int toSpecies) {
+Species Friend::stringToSpecies(string toSpecies) {
 
 	Species newSpecies;
+	SafeStringConversion::toLowerCase(toSpecies);
 
-	switch (toSpecies) {
-		case(0) :
-			newSpecies = SPECIES_UNICORN;
-			break;
-		case(1) :
-			newSpecies = SPECIES_PEGASUS;
-			break;
-		case(2) :
-			newSpecies = SPECIES_EP;
-			break;
-		case(3) :
-			newSpecies = SPECIES_ALICORN;
-			break;
-		case(4) :
-			newSpecies = SPECIES_ZEBRA;
-			break;
-		case(5) :
-			newSpecies = SPECIES_CRITTER;
-			break;
-		case(6) :
-			newSpecies = SPECIES_DRAGON;
-			break;
-		case(7) :
-			newSpecies = SPECIES_BUFFALO;
-			break;
-		default:
-			newSpecies = SPECIES_INVALID;
-			break;
-	}
+	if (toSpecies.compare("unicorn") == 0)
+		newSpecies = SPECIES_UNICORN;
+	else if (toSpecies.compare("pegasus") == 0)
+		newSpecies = SPECIES_PEGASUS;
+	else if (toSpecies.compare("earth pony") == 0)
+		newSpecies = SPECIES_EP;
+	else if (toSpecies.compare("alicorn") == 0)
+		newSpecies = SPECIES_ALICORN;
+	else if (toSpecies.compare("critter") == 0)
+		newSpecies = SPECIES_CRITTER;
+	else if (toSpecies.compare("dragon") == 0)
+		newSpecies = SPECIES_DRAGON;
+	else if (toSpecies.compare("zebra") == 0)
+		newSpecies = SPECIES_ZEBRA;
+	else if (toSpecies.compare("buffalo") == 0)
+		newSpecies = SPECIES_BUFFALO;
+	else
+		newSpecies = SPECIES_INVALID;
 
 	return newSpecies;
 }

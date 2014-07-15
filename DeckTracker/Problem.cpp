@@ -70,11 +70,8 @@ bool Problem::validateInput(vector<string> input) {
 	}
 
 	// Primary Colour
-	Colour prospectiveColour = COLOUR_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[3]);
+	Colour prospectiveColour = Card::stringToColour(input[3]);
 
-	if (validityFlag)
-		prospectiveColour = Card::intToColour(SafeStringConversion::stringToInt(input[3]));
 	if (prospectiveColour == COLOUR_INVALID) {
 		cout << "ERROR: Invalid primary colour passed to Problem." << endl;
 		return false;
@@ -89,11 +86,8 @@ bool Problem::validateInput(vector<string> input) {
 	}
 
 	// Secondary Colour
-	prospectiveColour = COLOUR_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[5]);
+	prospectiveColour = Card::stringToColour(input[5]);
 
-	if (validityFlag)
-		prospectiveColour = Card::intToColour(SafeStringConversion::stringToInt(input[5]));
 	if (prospectiveColour == COLOUR_INVALID) {
 		cout << "ERROR: Invalid secondary colour passed to Problem." << endl;
 		return false;
@@ -123,9 +117,9 @@ void Problem::buildCard(vector<string> formattedInput) {
 	modifyName(formattedInput[0]);
 	pointBonus = SafeStringConversion::stringToInt(formattedInput[1]);
 	isStarting = SafeStringConversion::stringToBool(formattedInput[2]);
-	primaryColour = Card::intToColour(SafeStringConversion::stringToInt(formattedInput[3]));
+	primaryColour = Card::stringToColour(formattedInput[3]);
 	primaryColourConfrontCost = SafeStringConversion::stringToInt(formattedInput[4]);
-	secondaryColour = Card::intToColour(SafeStringConversion::stringToInt(formattedInput[5]));
+	secondaryColour = Card::stringToColour(formattedInput[5]);
 	secondaryColourConfrontCost = SafeStringConversion::stringToInt(formattedInput[6]);
 	neutralConfrontCost = SafeStringConversion::stringToInt(formattedInput[7]);
 	// All further strings treated as special Text.

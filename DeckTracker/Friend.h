@@ -22,7 +22,7 @@ private:
 	Species species;
 	const static int NUM_PROPERTIES = 7;
 
-	static Species intToSpecies(int toSpecies);
+	static Species stringToSpecies(string toSpecies);
 
 public:
 	Friend();

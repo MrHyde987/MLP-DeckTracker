@@ -1,5 +1,6 @@
 
 #include "Card.h"
+#include "SafeStringConversion.h"
 
 Card::Card() {}
 
@@ -53,36 +54,25 @@ void Card::modifySpecialText(vector<string> newText) {
 	specialText = newText;
 }
 
-Colour Card::intToColour(int inputNum) {
+Colour Card::stringToColour(string toConvert) {
 
 	Colour colour;
+	SafeStringConversion::toLowerCase(toConvert);
 
-	switch (inputNum) {
-		case(0) :
-			colour = COLOUR_NONE;
-			break;
-		case(1) :
-			colour = COLOUR_PURPLE;
-			break;
-		case(2) :
-			colour = COLOUR_WHITE;
-			break;
-		case(3) :
-			colour = COLOUR_YELLOW;
-			break;
-		case(4) :
-			colour = COLOUR_ORANGE;
-			break;
-		case(5) :
-			colour = COLOUR_BLUE;
-			break;
-		case(6) :
-			colour = COLOUR_PINK;
-			break;
-		default :
-			colour = COLOUR_INVALID;
-			break;
-	}
+	if (toConvert.compare("none") == 0)
+		colour = COLOUR_NONE;
+	else if (toConvert.compare("purple") == 0)
+		colour = COLOUR_PURPLE;
+	else if (toConvert.compare("white") == 0)
+		colour = COLOUR_WHITE;
+	else if (toConvert.compare("yellow") == 0)
+		colour = COLOUR_YELLOW;
+	else if (toConvert.compare("orange") == 0)
+		colour = COLOUR_ORANGE;
+	else if (toConvert.compare("pink") == 0)
+		colour = COLOUR_PINK;
+	else
+		colour = COLOUR_INVALID;
 
 	return colour;
 }

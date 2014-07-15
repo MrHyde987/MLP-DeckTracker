@@ -27,7 +27,7 @@ void testAddCards() {
 	bool cardInputSuccess = false;
 
 	CardSet cardWorkingSet;
-	Card* newCard;
+	Card* newCard = NULL;
 	vector<string> cardArgs;
 
 	cout << "Let's add some cards" << endl;
@@ -130,7 +130,7 @@ void testAddCards() {
 			if (cardInputSuccess) {
 				cout << "Card added successfully!" << endl;
 				newCard->buildCard(cardArgs);
-				cardWorkingSet.insert(newCard, mode);
+				cardWorkingSet.insert(newCard);
 			}
 		}
 
@@ -141,7 +141,7 @@ void testAddCards() {
 
 int main() {
 
-	std::cout << "MLP DeckTracker version 0.2.1" << std::endl;
+	std::cout << "MLP DeckTracker version 0.3.1" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
 	testAddCards();

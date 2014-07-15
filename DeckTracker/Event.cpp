@@ -29,11 +29,8 @@ bool Event::validateInput(vector<string> input) {
 		return false;
 	}
 	// Proper colour
-	Colour prospectiveColour = COLOUR_INVALID;
-	validityFlag = SafeStringConversion::checkIsInt(input[1]);
+	Colour prospectiveColour = Card::stringToColour(input[1]);
 
-	if (validityFlag)
-		prospectiveColour = Card::intToColour(SafeStringConversion::stringToInt(input[1]));
 	if (prospectiveColour == COLOUR_INVALID) {
 		cout << "ERROR: Invalid colour passed to Event." << endl;
 		return false;
@@ -66,7 +63,7 @@ bool Event::validateInput(vector<string> input) {
 void Event::buildCard(vector<string> formattedInput) {
 
 	modifyName(formattedInput[0]);
-	modifyColour(Card::intToColour(SafeStringConversion::stringToInt(formattedInput[1])));
+	modifyColour(Card::stringToColour(formattedInput[1]));
 	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[2]));
 	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
 	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
