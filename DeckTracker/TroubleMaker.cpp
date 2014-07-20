@@ -19,9 +19,9 @@ TroubleMaker::TroubleMaker(
 TroubleMaker::~TroubleMaker() {}
 
 void TroubleMaker::printStats() {
-
-	std::cout << boost::format("%1%  V:%2% P:%3% Pts:%4%") 
+	std::cout << boost::format("%1%\nVillain: %2%\nPower: %3%\nPts: %4%\nSpecialText:")
 		% accessName() % (isVillain ? "True " : "False") % accessPower() % pointValue << std::endl;
+	printSpecialText();
 }
 
 void TroubleMaker::formatPrompt() {

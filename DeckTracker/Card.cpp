@@ -54,6 +54,12 @@ void Card::modifySpecialText(vector<string> newText) {
 	specialText = newText;
 }
 
+void Card::printSpecialText() {
+	for (unsigned int i = 0; i < specialText.size(); ++i) {
+		std::cout << specialText[i] << endl;
+	}
+}
+
 Colour Card::stringToColour(string toConvert) {
 
 	Colour colour;
@@ -75,4 +81,36 @@ Colour Card::stringToColour(string toConvert) {
 		colour = COLOUR_INVALID;
 
 	return colour;
+}
+
+string Card::colourToString(Colour toConvert) {
+
+	string toRet;
+	switch (toConvert) {
+		case (COLOUR_NONE) :
+			toRet = "None";
+			break;
+		case (COLOUR_PURPLE) :
+			toRet = "Purple";
+			break;
+		case (COLOUR_WHITE) :
+			toRet = "White";
+			break;
+		case (COLOUR_YELLOW) :
+			toRet = "Yellow";
+			break;
+		case (COLOUR_ORANGE) :
+			toRet = "Orange";
+			break;
+		case (COLOUR_BLUE) :
+			toRet = "Blue";
+			break;
+		case (COLOUR_PINK) :
+			toRet = "Pink";
+			break;
+		default :
+			toRet = "ERROR: Attempted to convert invalid Colour";
+	}
+
+	return toRet;
 }

@@ -1,6 +1,13 @@
 
 #include "Main.h"
 
+// The mode will be used to govern a lot of operations concerning
+// the card set, most importantly allowing us to optimize queries by using
+// segmented sets.
+Mode mode = MODE_NOT_SET;
+// Note that mode is global here and will be externed by several of the other
+// compilation units.
+
 vector<string> &split(string &s, char delim, vector<string> &elems) {
 	stringstream ss(s);
 	string item;
@@ -9,15 +16,6 @@ vector<string> &split(string &s, char delim, vector<string> &elems) {
 			elems.push_back(item);
 	}
 	return elems;
-}
-
-void testInput() {
-
-	std::string inText;
-
-	std::getline(std::cin, inText);
-
-	std::cout << inText;
 }
 
 void testAddCards() {
@@ -137,11 +135,14 @@ void testAddCards() {
 		getline(cin, cardInput);
 	}
 	cout << "Quitting input" << endl;
+
+	cout << "Cards in working set:" << endl;
+	cardWorkingSet.print();
 }
 
 int main() {
 
-	std::cout << "MLP DeckTracker version 0.3.1" << std::endl;
+	std::cout << "MLP DeckTracker version 0.4.0" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
 	testAddCards();

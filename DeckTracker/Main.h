@@ -30,9 +30,8 @@ typedef enum {
 
 } Mode;
 
-// The mode will be used to govern a lot of operations concerning
-// the card set, most importantly allowing us to optimize queries by using
-// segmented sets.
-static Mode mode = MODE_NOT_SET;
+// TODO: On the refactor, this is another utility method that should go in 
+// some general location.
+vector<string> &split(string &s, char delim, vector<string> &elems);
 
 #endif // ndef _MAIN_

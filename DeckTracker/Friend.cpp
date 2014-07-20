@@ -20,10 +20,11 @@ Friend::~Friend() {}
 
 void Friend::printStats() {
 
-	// TODO: Test this to see if it overflows the line. -> It does.
-	std::cout << boost::format("%1%  Action Cost:%2% Colour:%3% Colour Cost:%4% Power:%5% Species:%6%") 
-		% accessName() % accessActionCost() % accessColour()
-		% accessDevelopmentCost() % accessPower() % species  << std::endl;
+	std::cout << boost::format("%1%\nAction Cost: %2%\nColour: %3%\nColour Cost: %4%\nPower: %5%\nSpecies: %6%\nSpecial Text:") 
+		% accessName() % accessActionCost() % Card::colourToString(accessColour())
+		% accessDevelopmentCost() % accessPower() % speciesToString(species) << std::endl;
+
+	printSpecialText();
 }
 
 void Friend::formatPrompt() {
@@ -57,7 +58,7 @@ bool Friend::validateInput(vector<string> input) {
 	}
 
 	// Action Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[4]);
+	validityFlag = SafeStringConversion::checkIsInt(input[3]);
 
 	if (!validityFlag) {
 		cout << "ERROR: Invalid action cost passed to Friend." << endl;
@@ -65,7 +66,7 @@ bool Friend::validateInput(vector<string> input) {
 	}
 
 	// Colour Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[5]);
+	validityFlag = SafeStringConversion::checkIsInt(input[4]);
 
 	if (!validityFlag) {
 		cout << "ERROR: Invalid development cost passed to Friend." << endl;
@@ -73,7 +74,7 @@ bool Friend::validateInput(vector<string> input) {
 	}
 
 	// Power
-	validityFlag = SafeStringConversion::checkIsInt(input[6]);
+	validityFlag = SafeStringConversion::checkIsInt(input[5]);
 
 	if (!validityFlag) {
 		cout << "ERROR: Invalid power passed to Friend." << endl;
@@ -124,4 +125,40 @@ Species Friend::stringToSpecies(string toSpecies) {
 		newSpecies = SPECIES_INVALID;
 
 	return newSpecies;
+}
+
+string Friend::speciesToString(Species toString) {
+
+	string toRet;
+	switch (toString) {
+
+		case (SPECIES_UNICORN) :
+			toRet = "Unicorn";
+			break;
+		case (SPECIES_PEGASUS) :
+			toRet = "Pegasus";
+			break;
+		case (SPECIES_EP) :
+			toRet = "Earth Pony";
+			break;
+		case (SPECIES_ALICORN) :
+			toRet = "Alicorn";
+			break;
+		case (SPECIES_ZEBRA) :
+			toRet = "Zebra";
+			break;
+		case (SPECIES_CRITTER) :
+			toRet = "Critter";
+			break;
+		case (SPECIES_DRAGON) :
+			toRet = "Dragon";
+			break;
+		case (SPECIES_BUFFALO) :
+			toRet = "Buffalo";
+			break;
+		default :
+			toRet = "ERROR: Invalid Species was printed.";
+	}
+
+	return toRet;
 }

@@ -77,6 +77,9 @@ void Event::buildCard(vector<string> formattedInput) {
 }
 
 void Event::printStats() {
-	std::cout << boost::format("%1%  Action Cost:%2% Colour:%3% Colour Cost:%4%")
-		% accessName() % accessActionCost() % accessColour() % accessDevelopmentCost() << std::endl;
+	std::cout << boost::format("%1%\nAction Cost: %2%\nColour: %3%\nColour Cost: %4%\nSpecial Text:")
+		% accessName() % accessActionCost() % Card::colourToString(accessColour()) 
+		% accessDevelopmentCost() << std::endl;
+
+	printSpecialText();
 }

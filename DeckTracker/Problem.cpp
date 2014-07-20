@@ -28,15 +28,11 @@ Problem::Problem(
 Problem::~Problem() {}
 
 void Problem::printStats() {
-
-	std::cout << "Card Details: " << std::endl;
-	// TODO: Nicely formatted output
-	//		 I need the colours to print out as letters rather than numbers...
-
-	std::cout << boost::format("%1%   %2%/%3% %4%/%5% %6% %7% %8%") 
-		% accessName() % primaryColour % primaryColourConfrontCost 
-		% secondaryColour % secondaryColourConfrontCost % neutralConfrontCost % pointBonus 
+	std::cout << boost::format("%1%\nPrimary Colour/Cost: %2%/%3%\nSecondary Colour/Cost: %4%/%5%\nNeutral Cost: %6%\nBonus: %7%\nStarting: %8%\nSpecial Text:") 
+		% accessName() % Card::colourToString(primaryColour) % primaryColourConfrontCost 
+		% Card::colourToString(secondaryColour) % secondaryColourConfrontCost % neutralConfrontCost % pointBonus 
 		% isStarting << std::endl;
+	printSpecialText();
 }
 
 void Problem::formatPrompt() {

@@ -3,6 +3,7 @@
 #define _CARD_
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -47,8 +48,10 @@ protected:
 	vector<string> accessSpecialText();
 	void modifyName(string newName);
 	void modifySpecialText(vector<string> newText);
+	void printSpecialText();
 
 	static Colour stringToColour(string toConvert);
+	static string colourToString(Colour toConvert);
 };
 
 #endif // ndef _CARD_

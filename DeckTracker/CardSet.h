@@ -4,6 +4,7 @@
 
 #include "Main.h" // for the Mode enum
 #include <vector>
+#include <iostream>
 
 class Card;
 using namespace std;
@@ -32,8 +33,8 @@ public:
 	~CardSet();
 
 	void insert(Card* toInsert);
-
 	
+	void print();
 };
 
 #endif // _CARD_SET_

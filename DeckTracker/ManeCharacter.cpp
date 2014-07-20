@@ -20,8 +20,10 @@ ManeCharacter::~ManeCharacter() {}
 
 void ManeCharacter::printStats() {
 
-	std::cout << boost::format("%1%  P:%2% Colour:%3% OnFlip%4%") 
-		% accessName() % accessPower() % accessColour() % flippedPower << std::endl;
+	std::cout << boost::format("%1%\nPower: %2%\nColour: %3%\nFlipped Power: %4%\nFlip Condition: %5%\nSpecial Text (after flipping):") 
+		% accessName() % accessPower() % Card::colourToString(accessColour()) 
+		% flippedPower % flipCondition << std::endl;
+	printSpecialText();
 }
 
 void ManeCharacter::formatPrompt() {
