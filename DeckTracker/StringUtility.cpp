@@ -1,9 +1,9 @@
 
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 
 // Verifies that a string fits the proper format to be considered
 // a well-formed int. Overflows are considered errors.
-bool SafeStringConversion::checkIsInt(string in) {
+bool StringUtility::checkIsInt(string in) {
 
 	// Ints may start with a '-' for negative
 	// Other characters must be digits, and so fall within
@@ -41,7 +41,7 @@ bool SafeStringConversion::checkIsInt(string in) {
 // Converts a string to an integer, which is exported in toConvert
 // This conversion assumes that the input has been verified with 
 // checkIsInt above, and so does no error-checking.
-int SafeStringConversion::stringToInt(string in) {
+int StringUtility::stringToInt(string in) {
 
 	// Ints may start with a '-' for negative
 	// Other characters must be digits, and so fall within
@@ -69,16 +69,17 @@ int SafeStringConversion::stringToInt(string in) {
 
 // Verifies that string in is of a form that can be readily
 // interpreted as a boolean value.
-bool SafeStringConversion::checkIsBool(string in) {
+bool StringUtility::checkIsBool(string in) {
 
 	bool retValue = true;
+	toLowerCase(in);
 
-	if (in.compare("True") == 0 ||
-		in.compare("true") == 0 ||
-		in.compare("T") == 0 ||
-		in.compare("False") == 0 ||
+	if (in.compare("true") == 0 ||
+		in.compare("t") == 0 ||
 		in.compare("false") == 0 ||
-		in.compare("F") == 0)
+		in.compare("f") == 0 ||
+		in.compare("yes") == 0 ||
+		in.compare("no") == 0)
 		retValue = true;
 	else
 		retValue = false;
@@ -89,29 +90,31 @@ bool SafeStringConversion::checkIsBool(string in) {
 // Safely converts a string to a boolean value. It is assumed
 // that string in has already been verified by checkIsBool above,
 // and so no error-checking is done.
-bool SafeStringConversion::stringToBool(string in) {
+bool StringUtility::stringToBool(string in) {
 
+	toLowerCase(in);
+	
 	bool retValue = true;
 
-	if (in.compare("True") == 0 ||
-		in.compare("true") == 0 ||
-		in.compare("T") == 0)
+	if (in.compare("true") == 0 ||
+		in.compare("yes") == 0 ||
+		in.compare("t") == 0)
 		retValue = true;
-	else if (in.compare("False") == 0 ||
-		in.compare("false") == 0 ||
-		in.compare("F") == 0)
+	else if (in.compare("false") == 0 ||
+		in.compare("no") == 0 ||
+		in.compare("f") == 0)
 		retValue = false;
 
 	return retValue;
 }
 
-bool SafeStringConversion::checkIsFloat(string in) {
+bool StringUtility::checkIsFloat(string in) {
 	
 	// TODO: Implement this.
 	return false;
 }
 
-float SafeStringConversion::stringToFloat(string in) {
+float StringUtility::stringToFloat(string in) {
 
 	// TODO: This method is not needed for the present application, and is
 	// a trickier problem after all, so I will work on it later.
@@ -120,7 +123,7 @@ float SafeStringConversion::stringToFloat(string in) {
 
 // Replaces ASCII capitals with ASCII lowercase.
 // Ignores non-letter characters.
-void SafeStringConversion::toLowerCase(string &in) {
+void StringUtility::toLowerCase(string &in) {
 
 	for (unsigned int i = 0; i < in.length(); ++i) {
 		if (in[i] >= 65 && in[i] <= 90) {
@@ -131,11 +134,21 @@ void SafeStringConversion::toLowerCase(string &in) {
 
 // Replaces ASCII lowercase letters with ASCII capitals.
 // Ignores non-letter characters.
-void SafeStringConversion::toUpperCase(string &in) {
+void StringUtility::toUpperCase(string &in) {
 
 	for (unsigned int i = 0; i < in.length(); ++i) {
 		if (in[i] >= 97 && in[i] <= 122) {
 			in[i] -= 32;
 		}
 	}
+}
+
+vector<string> &StringUtility::split(string &s, char delim, vector<string> &elems) {
+	stringstream ss(s);
+	string item;
+	while (getline(ss, item, delim)) {
+		if (!item.empty())
+			elems.push_back(item);
+	}
+	return elems;
 }

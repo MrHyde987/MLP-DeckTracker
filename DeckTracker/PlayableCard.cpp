@@ -2,6 +2,8 @@
 
 PlayableCard::PlayableCard() {}
 
+PlayableCard::PlayableCard(string name) : Card(name) {}
+
 PlayableCard::PlayableCard(
 	Colour colour,
 	int power,

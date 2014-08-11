@@ -2,14 +2,14 @@
 #define _SSC_
 
 #include <string>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
-// This class contains utility functions for validating that strings
-// conform to certain proper forms. It can be used for input validation,
-// supplementing the relatively weak error protection offered by functions
-// like stoi.
-class SafeStringConversion {
+// This class contains utility functions for working with strings,
+// especially strings that have just been parsed from an input stream.
+class StringUtility {
 
 private:
 	const static int ASCII_ZERO = 48;
@@ -27,8 +27,9 @@ public:
 	static float stringToFloat(string in);
 
 	// Various other utility functions
-	// TODO: Refactor this! These should go in some utility class
 	static void toLowerCase(string &in);
 	static void toUpperCase(string &in);
+
+	static vector<string> &split(string &s, char delim, vector<string> &elems);
 };
 #endif // _SSC_

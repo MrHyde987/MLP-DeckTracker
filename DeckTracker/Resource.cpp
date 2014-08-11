@@ -1,9 +1,9 @@
 #include "Resource.h"
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 #include "boost/format.hpp"
 
-Resource::Resource() {};
-
+Resource::Resource() {}
+Resource::Resource(string name) : FRE(name) {}
 Resource::Resource(
 	Location location,
 	int actionCost,
@@ -26,83 +26,102 @@ void Resource::printStats() {
 	printSpecialText();
 }
 
-void Resource::formatPrompt() {
-	cout << "For Resources, please use the following input format:" << endl;
-	cout << "[Name],[Colour],[Action Cost],[Colour Cost],[Power],[Location],[Special Text]" << endl;
+bool Resource::addFields(string inputToAdd) {
+	
+	Colour prospectiveColour;
+	Location prospectiveLocation;
+
+	switch (accessFieldsAdded()) {
+
+		case(0) :
+			// Require the name
+			modifyName(inputToAdd);
+			incrementAddedFields();
+			cout << "Colour: ";
+			return true;
+		case(1) :
+			// Require a Colour next
+			prospectiveColour = Card::stringToColour(inputToAdd);
+			if (prospectiveColour != COLOUR_INVALID) {
+				modifyColour(prospectiveColour);
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Action Cost: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid colour entered for Resource.\nColour :";
+				return false;
+			}
+		case(2) :
+			// Action Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyActionCost(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Colour Cost (0 if none): ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Action Cost entered for Resource.\nAction Cost: ";
+				return false;
+			}
+		case(3) :
+			// Colour Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Faceoff Power: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Colour Cost entered for Resource.\nColour Cost (0 if none): ";
+				return false;
+			}
+		case(4) :
+			// Faceoff Power
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyPower(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Location: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Faceoff Power entered for Resource.\nFaceoff Power: ";
+				return false;
+			}
+		case(5) :
+			// Location
+			prospectiveLocation = stringToLocation(inputToAdd);
+			if (prospectiveLocation != LOCATION_INVALID) {
+				location = prospectiveLocation;
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Special Text: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid location entered for Resource.\nLocation :";
+				return false;
+			}
+		default :
+			// Special Text is being added
+			pushSpecialText(inputToAdd);
+			return true;
+	}
+
+	// Execution should not fall through to here
+	cout << "ERROR: There is a bug in Resource::addFields" << endl;
+	return false;
 }
 
-bool Resource::validateInput(vector<string> input) {
-
-	bool validityFlag = false;
-
-	if (input.size() < NUM_PROPERTIES) {
-		cout << "ERROR: Invalid number of arguments passed to Resource." << endl;
-		return false;
-	}
-
-	// Proper colour
-	Colour prospectiveColour = Card::stringToColour(input[1]);
-
-	if (prospectiveColour == COLOUR_INVALID) {
-		cout << "ERROR: Invalid colour passed to Resource." << endl;
-		return false;
-	}
-
-	// Action Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[2]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid action cost passed to Resource." << endl;
-		return false;
-	}
-
-	// Colour Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[3]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid development cost passed to Resource." << endl;
-		return false;
-	}
-
-	// Power
-	validityFlag = SafeStringConversion::checkIsInt(input[4]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid power passed to Resource." << endl;
-		return false;
-	}
-
-	// Location
-	Location prospectiveLocation = stringToLocation(input[5]);
-
-	if (prospectiveLocation == LOCATION_INVALID) {
-		cout << "ERROR: Invalid location passed to Resource." << endl;
-		return false;
-	}
-
-	return validityFlag;
-}
-
-void Resource::buildCard(vector<string> formattedInput) {
-
-	modifyName(formattedInput[0]);
-	modifyColour(Card::stringToColour(formattedInput[1]));
-	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[2]));
-	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
-	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
-	location = stringToLocation(formattedInput[5]);
-	// All further strings treated as special text.
-	vector<string> specialText;
-	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
-		specialText.push_back(formattedInput[i]);
-	}
-	modifySpecialText(specialText);
+bool Resource::isCardComplete() {
+	return accessFieldsAdded() >= NUM_FIELDS;
 }
 
 Location Resource::stringToLocation(string toConvert) {
 
 	Location newLocation;
-	SafeStringConversion::toLowerCase(toConvert);
+	StringUtility::toLowerCase(toConvert);
 	
 	if (toConvert.compare("home") == 0)
 		newLocation = LOCATION_HOME;

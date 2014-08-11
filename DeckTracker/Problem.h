@@ -16,10 +16,11 @@ private:
 	int secondaryColourConfrontCost;
 	bool isStarting;
 
-	const static int NUM_PROPERTIES = 9;
+	const static int NUM_FIELDS = 8;
 
 public:
 	Problem();
+	Problem(string name);
 	Problem(
 		int pointBonus,
 		int neutralConfrontCost,
@@ -34,8 +35,7 @@ public:
 	~Problem();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 };
 #endif // _PROBLEM_

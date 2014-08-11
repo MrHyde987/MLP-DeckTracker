@@ -1,12 +1,16 @@
 #include "ManeCharacter.h"
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 #include "boost/format.hpp"
 
 ManeCharacter::ManeCharacter() {}
 
+ManeCharacter::ManeCharacter(string name) : PlayableCard(name) {}
+
 ManeCharacter::ManeCharacter(
 	std::string flipCondition,
 	int flippedPower,
+	int startHomeLimit,
+	int flippedHomeLimit,
 	Colour colour,
 	int power,
 	string name,
@@ -14,70 +18,109 @@ ManeCharacter::ManeCharacter(
 
 	this->flipCondition = flipCondition;
 	this->flippedPower = flippedPower;
+	this->startHomeLimit = startHomeLimit;
+	this->flippedHomeLimit = flippedHomeLimit;
 }
 
 ManeCharacter::~ManeCharacter() {}
 
 void ManeCharacter::printStats() {
 
-	std::cout << boost::format("%1%\nPower: %2%\nColour: %3%\nFlipped Power: %4%\nFlip Condition: %5%\nSpecial Text (after flipping):") 
-		% accessName() % accessPower() % Card::colourToString(accessColour()) 
-		% flippedPower % flipCondition << std::endl;
+	std::cout << boost::format("%1%\nColour: %2%\nPower: %3%\nHome Limit: %4%\nFlipped Power: %5%\nFlipped Home Limit: %6%\nFlip Condition: %7%\nSpecial Text (after flipping):") 
+		% accessName() % Card::colourToString(accessColour()) % accessPower() % startHomeLimit
+		% flippedPower % flippedHomeLimit % flipCondition << std::endl;
 	printSpecialText();
 }
 
-void ManeCharacter::formatPrompt() {
-	cout << "For Mane Characters, please use the following input format:" << endl;
-	cout << "[Name],[Colour],[Initial Power],[Flipped Power],[Flip Condition],[Special Text]" << endl;
+bool ManeCharacter::addFields(string inputToAdd) {
+	Colour prospectiveColour;
+
+	switch (accessFieldsAdded()) {
+		case(0) :
+			// Require the name
+			modifyName(inputToAdd);
+			incrementAddedFields();
+			cout << "Colour: ";
+			return true;
+		case(1) :
+			// Require a Colour next
+			prospectiveColour = Card::stringToColour(inputToAdd);
+			if (prospectiveColour != COLOUR_INVALID) {
+				modifyColour(prospectiveColour);
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Initial Power: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid colour passed to Mane Character.\nColour :";
+				return false;
+			}
+		case(2) :
+			// Initial Power
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyPower(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Initial Home Limit: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Initial Power entered for Mane Character.\nInitial Power: ";
+				return false;
+			}
+		case(3) :
+			// Initial Home Limit
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				startHomeLimit = StringUtility::stringToInt(inputToAdd);
+				incrementAddedFields();
+				cout << "Flipped Power: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Initial Home Limit entered for Mane Character.\nInitial Home Limit: ";
+				return false;
+			}
+		case(4) :
+			// Flipped Power
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				flippedPower = StringUtility::stringToInt(inputToAdd);
+				incrementAddedFields();
+				cout << "Flipped Home Limit: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Flipped Power entered for Mane Character.\nFlipped Power: ";
+				return false;
+			}
+		case(5) :
+			// Flipped Home Limit
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				flippedHomeLimit = StringUtility::stringToInt(inputToAdd);
+				incrementAddedFields();
+				cout << "Flip Condition: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Flipped Home Limit entered for Mane Character.\nFlipped Home Limit: ";
+				return false;
+			}
+		case(6) :
+			// All manes have a flip condition
+			flipCondition = inputToAdd;
+			incrementAddedFields();
+			cout << "Special Text (in Boosted State): ";
+			return true;
+		default :
+			// Special Text is being added
+			pushSpecialText(inputToAdd);
+			return true;
+	}
+
+	// Execution should not fall through to here.
+	cout << "ERROR: There is a bug in ManeCharacter::addFields" << endl;
+	return false;
 }
 
-bool ManeCharacter::validateInput(vector<string> input) {
-
-	bool validityFlag = true;
-
-	if (input.size() < NUM_PROPERTIES) {
-		cout << "ERROR: Invalid number of arguments passed to Mane Character." << endl;
-		return false;
-	}
-
-	// Proper colour
-	Colour prospectiveColour = Card::stringToColour(input[1]);
-
-	if (prospectiveColour == COLOUR_INVALID) {
-		cout << "ERROR: Invalid colour passed to Mane Character." << endl;
-		return false;
-	}
-
-	// Initial Power
-	validityFlag = SafeStringConversion::checkIsInt(input[2]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid initial power passed to Mane Character." << endl;
-		return false;
-	}
-
-	// Flipped Power
-	validityFlag = SafeStringConversion::checkIsInt(input[3]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid flipped power passed to Mane Character." << endl;
-		return false;
-	}
-
-	return validityFlag;
-}
-
-void ManeCharacter::buildCard(vector<string> formattedInput) {
-
-	modifyName(formattedInput[0]);
-	modifyColour(Card::stringToColour(formattedInput[1]));
-	modifyPower(SafeStringConversion::stringToInt(formattedInput[2]));
-	flippedPower = SafeStringConversion::stringToInt(formattedInput[3]);
-	flipCondition = formattedInput[4];
-	// All further strings treated as (flipped) special text / type modifiers.
-	vector<string> specialText;
-	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
-		specialText.push_back(formattedInput[i]);
-	}
-	modifySpecialText(specialText);
+bool ManeCharacter::isCardComplete() {
+	return accessFieldsAdded() >= NUM_FIELDS;
 }

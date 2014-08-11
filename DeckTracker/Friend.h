@@ -20,13 +20,14 @@ class Friend : public FRE {
 
 private:
 	Species species;
-	const static int NUM_PROPERTIES = 7;
+	const static int NUM_FIELDS = 6;
 
 	static Species stringToSpecies(string toSpecies);
 	static string speciesToString(Species toString);
 
 public:
 	Friend();
+	Friend(string name);
 	Friend(
 		Species species,
 		int actionCost,
@@ -39,8 +40,7 @@ public:
 	~Friend();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 };
 #endif _FRIEND_

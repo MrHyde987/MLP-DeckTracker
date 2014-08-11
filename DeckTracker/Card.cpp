@@ -1,17 +1,30 @@
 
 #include "Card.h"
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 
-Card::Card() {}
+Card::Card() {
 
-// Notably, for cards that have no special text, the specialText
-// field will hold the empty string ("")
+	filledFields = 0;
+	specialText = vector<string>();
+}
+
+// This version of the constructor is the one that will be used more
+// frequently for dynamic card-building, since we will start with 
+// just the card's name.
+Card::Card(string name) : name(name) {
+
+	filledFields = 1;
+	specialText = vector<string>();
+}
+
 // NOTE: Even though the dynamic "card-building" methods will not
 // make use of these constructors, they will be important for reading
 // cards from deck and manifest files later on.
 Card::Card(string name, vector<string> specialText) {
 
-	frequency = 1;
+	// How to deal with frequency when reading in files is a design
+	// decision that has yet to be made.
+	//frequency = 1;
 	this->name = name;
 	this->specialText = specialText;
 }
@@ -60,10 +73,22 @@ void Card::printSpecialText() {
 	}
 }
 
+void Card::pushSpecialText(string textToAdd) {
+	specialText.push_back(textToAdd);
+}
+
+void Card::incrementAddedFields() {
+	filledFields++;
+}
+
+const int Card::accessFieldsAdded() const {
+	return filledFields;
+}
+
 Colour Card::stringToColour(string toConvert) {
 
 	Colour colour;
-	SafeStringConversion::toLowerCase(toConvert);
+	StringUtility::toLowerCase(toConvert);
 
 	if (toConvert.compare("none") == 0)
 		colour = COLOUR_NONE;
@@ -77,6 +102,8 @@ Colour Card::stringToColour(string toConvert) {
 		colour = COLOUR_ORANGE;
 	else if (toConvert.compare("pink") == 0)
 		colour = COLOUR_PINK;
+	else if (toConvert.compare("blue") == 0)
+		colour = COLOUR_BLUE;
 	else
 		colour = COLOUR_INVALID;
 

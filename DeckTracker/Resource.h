@@ -20,13 +20,14 @@ class Resource : public FRE {
 private:
 	Location location;
 	
-	const static int NUM_PROPERTIES = 7;
+	const static int NUM_FIELDS = 6;
 
 	static Location stringToLocation(string toConvert);
 	static string locationToString(Location toConvert);
 
 public:
 	Resource();
+	Resource(string name);
 	Resource(
 		Location location,
 		int actionCost,
@@ -39,8 +40,7 @@ public:
 	~Resource();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 };
 #endif // _RESOURCE_

@@ -1,8 +1,10 @@
 #include "Friend.h"
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 #include "boost/format.hpp"
 
 Friend::Friend() {}
+
+Friend::Friend(string name) : FRE(name) {}
 
 Friend::Friend(
 	Species species,
@@ -27,83 +29,102 @@ void Friend::printStats() {
 	printSpecialText();
 }
 
-void Friend::formatPrompt() {
-	cout << "For Friends, please use the following input format:" << endl;
-	cout << "[Name],[Colour],[Species],[Action Cost],[Colour Cost],[Power],[Special Text]" << endl;
+bool Friend::addFields(string inputToAdd) {
+	
+	Colour prospectiveColour;
+	Species prospectiveSpecies;
+
+	switch (accessFieldsAdded()) {
+
+		case (0) :
+			// Require the name
+			modifyName(inputToAdd);
+			incrementAddedFields();
+			cout << "Colour: ";
+			return true;
+		case (1) :
+			// Require a Colour next
+			prospectiveColour = Card::stringToColour(inputToAdd);
+			if (prospectiveColour != COLOUR_INVALID) {
+				modifyColour(prospectiveColour);
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Species: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid colour passed to Friend.\nColour :";
+				return false;
+			}
+		case(2) :
+			// Species
+			prospectiveSpecies = stringToSpecies(inputToAdd);
+			if (prospectiveSpecies != SPECIES_INVALID) {
+				species = prospectiveSpecies;
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Action Cost: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Species passed to Friend.\nSpecies :";
+				return false;
+			}
+		case (3) :
+			// Action Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+			modifyActionCost(StringUtility::stringToInt(inputToAdd));
+			incrementAddedFields();
+			cout << "Colour Cost (0 if none): ";
+			return true;
+			}
+			else {
+				cout << "ERROR: Invalid Action Cost entered for Friend.\nAction Cost: ";
+				return false;
+			}
+		case (4) :
+			// Colour Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+			modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
+			incrementAddedFields();
+			cout << "Faceoff Power: ";
+			return true;
+			}
+			else {
+				cout << "ERROR: Invalid Colour Cost entered for Friend.\nColour Cost (0 if none): ";
+				return false;
+			}
+		case (5) :
+			// Faceoff Power
+			if (StringUtility::checkIsInt(inputToAdd)) {
+			modifyPower(StringUtility::stringToInt(inputToAdd));
+			incrementAddedFields();
+			cout << "Special Text: ";
+			return true;
+			}
+			else {
+				cout << "ERROR: Invalid Faceoff Power entered for Friend.\nFaceoff Power: ";
+				return false;
+			}
+		default :
+			// Special Text is being added
+			pushSpecialText(inputToAdd);
+			return true;
+	}
+
+	// Execution should not fall through to here.
+	cout << "ERROR: There is a bug in Friend::addFields" << endl;
+	return false;
 }
 
-bool Friend::validateInput(vector<string> input) {
-
-	bool validityFlag = false;
-
-	if (input.size() < NUM_PROPERTIES) {
-		cout << "ERROR: Invalid number of arguments passed to Friend." << endl;
-		return false;
-	}
-
-	// Proper colour
-	Colour prospectiveColour = Card::stringToColour(input[1]);
-
-	if (prospectiveColour == COLOUR_INVALID) {
-		cout << "ERROR: Invalid colour passed to Friend." << endl;
-		return false;
-	}
-
-	// Species
-	Species prospectiveSpecies = stringToSpecies(input[2]);
-
-	if (prospectiveSpecies == SPECIES_INVALID) {
-		cout << "ERROR: Invalid speices passed to Friend." << endl;
-		return false;
-	}
-
-	// Action Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[3]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid action cost passed to Friend." << endl;
-		return false;
-	}
-
-	// Colour Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[4]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid development cost passed to Friend." << endl;
-		return false;
-	}
-
-	// Power
-	validityFlag = SafeStringConversion::checkIsInt(input[5]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid power passed to Friend." << endl;
-		return false;
-	}
-
-	return validityFlag;
-}
-
-void Friend::buildCard(vector<string> formattedInput) {
-
-	modifyName(formattedInput[0]);
-	modifyColour(Card::stringToColour(formattedInput[1]));
-	species = stringToSpecies(formattedInput[2]);
-	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[3]));
-	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[4]));
-	modifyPower(SafeStringConversion::stringToInt(formattedInput[5]));
-	// All further strings treated as special text strings.
-	vector<string> specialText;
-	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
-		specialText.push_back(formattedInput[i]);
-	}
-	modifySpecialText(specialText);
+bool Friend::isCardComplete() {
+	return accessFieldsAdded() >= NUM_FIELDS;
 }
 
 Species Friend::stringToSpecies(string toSpecies) {
 
 	Species newSpecies;
-	SafeStringConversion::toLowerCase(toSpecies);
+	StringUtility::toLowerCase(toSpecies);
 
 	if (toSpecies.compare("unicorn") == 0)
 		newSpecies = SPECIES_UNICORN;
@@ -157,7 +178,7 @@ string Friend::speciesToString(Species toString) {
 			toRet = "Buffalo";
 			break;
 		default :
-			toRet = "ERROR: Invalid Species was printed.";
+			toRet = "ERROR: Attempted to convert invalid Species.";
 	}
 
 	return toRet;

@@ -12,6 +12,8 @@ public:
 
 	PlayableCard();
 
+	PlayableCard(string name);
+
 	PlayableCard(Colour colour, int power, string name, vector<string> text);
 	
 	// Abstract Class

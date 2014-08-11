@@ -9,6 +9,8 @@
 #include "ManeCharacter.h"
 #include "CardSet.h"
 
+#include "StringUtility.h"
+
 #include <iostream>
 #include <sstream>
 #include <vector>

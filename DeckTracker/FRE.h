@@ -13,6 +13,7 @@ private:
 public:
 
 	FRE();
+	FRE(string name);
 	FRE(
 		int actionCost,
 		int developmentCost,

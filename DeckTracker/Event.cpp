@@ -1,9 +1,11 @@
 #include "Event.h"
 
 #include "boost/format.hpp"
-#include "SafeStringConversion.h"
+#include "StringUtility.h"
 
 Event::Event() {}
+
+Event::Event(string name) : FRE(name) {}
 
 Event::Event(
 	int actionCost,
@@ -15,65 +17,80 @@ Event::Event(
 
 Event::~Event() {}
 
-void Event::formatPrompt() {
-	cout << "For Events, please use the following input format:" << endl;
-	cout << "[Name],[Colour],[Action Cost],[Colour Cost],[Power],[Special Text]" << endl;
+bool Event::isCardComplete() {
+	return accessFieldsAdded() >= NUM_FIELDS;
 }
 
-bool Event::validateInput(vector<string> input) {
+bool Event::addFields(string inputToAdd) {
+	
+	Colour prospectiveColour; // Declared up here to get around C2360
 
-	bool validityFlag = true;
-
-	if (input.size() < NUM_PROPERTIES) {
-		cout << "ERROR: Invalid number of arguments passed to Event." << endl;
-		return false;
+	switch (accessFieldsAdded()) {
+		case (0) :
+			// Require the name
+			modifyName(inputToAdd);
+			incrementAddedFields();
+			cout << "Colour: ";
+			return true;
+		case (1) :
+			// Require a Colour next
+			prospectiveColour = Card::stringToColour(inputToAdd);
+			if (prospectiveColour != COLOUR_INVALID) {
+				modifyColour(prospectiveColour);
+				incrementAddedFields();
+				// Prompt for next field:
+				cout << "Action Cost: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid colour passed to Event.\nColour :";
+				return false;
+			}
+		case (2) :
+			// Action Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyActionCost(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Colour Cost (0 if none): ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
+				return false;
+			}
+		case (3) :
+			// Colour Cost
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Faceoff Power: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
+				return false;
+			}
+		case (4) :
+			// Faceoff Power
+			if (StringUtility::checkIsInt(inputToAdd)) {
+				modifyPower(StringUtility::stringToInt(inputToAdd));
+				incrementAddedFields();
+				cout << "Special Text: ";
+				return true;
+			}
+			else {
+				cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
+				return false;
+			}
+		default:
+			// Special Text is being added
+			pushSpecialText(inputToAdd);
+			return true;
 	}
-	// Proper colour
-	Colour prospectiveColour = Card::stringToColour(input[1]);
 
-	if (prospectiveColour == COLOUR_INVALID) {
-		cout << "ERROR: Invalid colour passed to Event." << endl;
-		return false;
-	}
-	// Action Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[2]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid action cost passed to Event." << endl;
-		return false;
-	}
-	// Colour Cost
-	validityFlag = SafeStringConversion::checkIsInt(input[3]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid colour cost passed to Event." << endl;
-		return false;
-	}
-	// Power
-	validityFlag = SafeStringConversion::checkIsInt(input[4]);
-
-	if (!validityFlag) {
-		cout << "ERROR: Invalid Power passed to Event." << endl;
-		return false;
-	}
-
-	return true;
-}
-
-void Event::buildCard(vector<string> formattedInput) {
-
-	modifyName(formattedInput[0]);
-	modifyColour(Card::stringToColour(formattedInput[1]));
-	modifyActionCost(SafeStringConversion::stringToInt(formattedInput[2]));
-	modifyDevelopmentCost(SafeStringConversion::stringToInt(formattedInput[3]));
-	modifyPower(SafeStringConversion::stringToInt(formattedInput[4]));
-	// All further strings treated as special text.
-	vector<string> specialText;
-	for (unsigned int i = NUM_PROPERTIES - 1; i < formattedInput.size(); ++i) {
-		specialText.push_back(formattedInput[i]);
-	}
-	modifySpecialText(specialText);
-
+	// The function should not fall through to here.
+	cout << "ERROR: There is a bug in addFields() in Event." << endl;
+	return false;
 }
 
 void Event::printStats() {

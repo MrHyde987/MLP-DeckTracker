@@ -7,15 +7,20 @@ class ManeCharacter : public PlayableCard {
 private:
 	string flipCondition;
 	int flippedPower;
+	int startHomeLimit;
+	int flippedHomeLimit;
 	
-	const static int NUM_PROPERTIES = 6;
+	const static int NUM_FIELDS = 7;
 
 public:
 
 	ManeCharacter();
+	ManeCharacter(string name);
 	ManeCharacter(
 		string flipCondition,
 		int flippedPower,
+		int startHomeLimit,
+		int flippedHomeLimit,
 		Colour colour,
 		int power,
 		string name,
@@ -24,8 +29,7 @@ public:
 	~ManeCharacter();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 };
 #endif // _PLAYABLE_CARD_

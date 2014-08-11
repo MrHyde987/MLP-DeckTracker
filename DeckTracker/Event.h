@@ -8,6 +8,8 @@ public:
 
 	Event();
 
+	Event(string name);
+
 	Event(
 		int actionCost,
 		int developmentCost,
@@ -19,11 +21,10 @@ public:
 	~Event();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 
 private:
-	const static int NUM_PROPERTIES = 6;
+	const static int NUM_FIELDS = 5;
 };
 #endif // _EVENT_

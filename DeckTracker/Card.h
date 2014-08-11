@@ -27,13 +27,20 @@ private:
 	string name;
 	vector<string> specialText;
 
+	// This is a state variable used to track the progress of building a card
+	// Every class will do this in a similar way, thus they all need this variable.
+	int filledFields;
+
 public:
 	Card();
+	Card(string name);
 	Card(string name, vector<string> text);
 	
 	// Abstract Class
 	virtual void printStats() = 0;
-	virtual void buildCard(vector<string> formattedInput) = 0;
+	// This method will likely replace the above...
+	virtual bool addFields(string inputToAdd) = 0;
+	virtual bool isCardComplete() = 0;
 	
 	virtual ~Card();
 
@@ -49,6 +56,9 @@ protected:
 	void modifyName(string newName);
 	void modifySpecialText(vector<string> newText);
 	void printSpecialText();
+	void pushSpecialText(string textToAdd);
+	const int accessFieldsAdded() const;
+	void incrementAddedFields();
 
 	static Colour stringToColour(string toConvert);
 	static string colourToString(Colour toConvert);

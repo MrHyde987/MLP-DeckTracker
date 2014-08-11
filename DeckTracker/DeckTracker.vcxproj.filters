@@ -42,13 +42,13 @@
     <ClInclude Include="Problem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SafeStringConversion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CardSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,10 +83,10 @@
     <ClCompile Include="Event.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SafeStringConversion.cpp">
+    <ClCompile Include="CardSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CardSet.cpp">
+    <ClCompile Include="StringUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

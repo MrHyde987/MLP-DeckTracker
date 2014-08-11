@@ -2,6 +2,8 @@
 
 FRE::FRE() {}
 
+FRE::FRE(string name) : PlayableCard(name) {}
+
 FRE::FRE(
 	int actionCost,
 	int developmentCost,

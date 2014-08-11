@@ -8,10 +8,11 @@ private:
 	int pointValue;
 	bool isVillain;
 
-	const static int NUM_PROPERTIES = 5;
+	const static int NUM_FIELDS = 4;
 
 public:
 	TroubleMaker();
+	TroubleMaker(string name);
 	TroubleMaker(
 		int pointValue,
 		bool isVillain,
@@ -23,8 +24,7 @@ public:
 	~TroubleMaker();
 
 	void printStats();
-	static void formatPrompt();
-	static bool validateInput(vector<string> input);
-	void buildCard(vector<string> formattedInput);
+	bool addFields(string inputToAdd);
+	bool isCardComplete();
 };
 #endif // _TM_

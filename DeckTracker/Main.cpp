@@ -8,16 +8,6 @@ Mode mode = MODE_NOT_SET;
 // Note that mode is global here and will be externed by several of the other
 // compilation units.
 
-vector<string> &split(string &s, char delim, vector<string> &elems) {
-	stringstream ss(s);
-	string item;
-	while (getline(ss, item, delim)) {
-		if (!item.empty())
-			elems.push_back(item);
-	}
-	return elems;
-}
-
 void testAddCards() {
 
 	string cardInput;
@@ -28,10 +18,10 @@ void testAddCards() {
 	Card* newCard = NULL;
 	vector<string> cardArgs;
 
-	cout << "Let's add some cards" << endl;
+	std::cout << "Let's add some cards" << endl;
 
-	cout << "First, specify the type of card that you are adding: (Choose one) " << endl;
-	cout << "Trouble Maker" << endl << "Mane Character" << endl << "Friend" << endl
+	std::cout << "First, specify the type of card that you are adding: (Choose one) " << endl;
+	std::cout << "Trouble Maker" << endl << "Mane Character" << endl << "Friend" << endl
 		<< "Resource" << endl << "Event" << endl << "Problem" << endl << "\"Quit\" to quit"<< endl;
 
 	getline(cin, cardInput);
@@ -42,110 +32,117 @@ void testAddCards() {
 		// At any time, entering a new mode switches, so these checks are
 		// always run.
 		if (cardInput.compare("Trouble Maker") == 0) {
-			cout << "In entry mode: Trouble Maker" << endl;
+			std::cout << "In entry mode: Trouble Maker" << endl;
 			mode = MODE_TM;
-			TroubleMaker::formatPrompt();
+			newCard = new TroubleMaker();
 			newModeSelected = true;
 		}
 		else if (cardInput.compare("Mane Character") == 0) {
-			cout << "In entry mode: Mane Character" << endl;
+			std::cout << "In entry mode: Mane Character" << endl;
 			mode = MODE_MC;
-			ManeCharacter::formatPrompt();
+			newCard = new ManeCharacter();
 			newModeSelected = true;
 		}
 		else if (cardInput.compare("Friend") == 0) {
-			cout << "In entry mode: Friend" << endl;
+			std::cout << "In entry mode: Friend" << endl;
 			mode = MODE_FRIEND;
-			Friend::formatPrompt();
+			newCard = new Friend();
 			newModeSelected = true;
 		}
 		else if (cardInput.compare("Resource") == 0) {
-			cout << "In entry mode: Resource" << endl;
+			std::cout << "In entry mode: Resource" << endl;
 			mode = MODE_RESOURCE;
-			Resource::formatPrompt();
+			newCard = new Resource();
 			newModeSelected = true;
 		}
 		else if (cardInput.compare("Event") == 0) {
-			cout << "In entry mode: Event" << endl;
+			std::cout << "In entry mode: Event" << endl;
 			mode = MODE_EVENT;
-			Event::formatPrompt();
+			newCard = new Event();
 			newModeSelected = true;
 		}
 		else if (cardInput.compare("Problem") == 0) {
-			cout << "In entry mode: Problem" << endl;
+			std::cout << "In entry mode: Problem" << endl;
 			mode = MODE_PROBLEM;
-			Problem::formatPrompt();
+			newCard = new Problem();
 			newModeSelected = true;
 		}
 
-		if (!newModeSelected) {
-			// Start getting actual card input.
-			// Presumably, cardInput holds proper card formatting, if it was not a mode.
-			cardArgs.clear();
-			cardArgs = split(cardInput, ',', cardArgs);
+		// Every card starts with a name, so prompt for one.
+		std::cout << "Entering new Card:" << endl;
+		std::cout << "Name: ";
 
-			switch (mode) {
+		while (mode != MODE_NOT_SET) {
 
-				case(MODE_TM) :
-					cardInputSuccess = TroubleMaker::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new TroubleMaker;
-					}
-					break;
-				case(MODE_MC) :
-					cardInputSuccess = ManeCharacter::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new ManeCharacter;
-					}
-					break;
-				case(MODE_FRIEND) :
-					cardInputSuccess = Friend::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new Friend;
-					}
-					break;
-				case(MODE_RESOURCE) :
-					cardInputSuccess = Resource::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new Resource;
-					}
-					break;
-				case(MODE_EVENT) :
-					cardInputSuccess = Event::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new Event;
-					}
-					break;
-				case(MODE_PROBLEM) :
-					cardInputSuccess = Problem::validateInput(cardArgs);
-					if (cardInputSuccess) {
-						newCard = new Problem;
-					}
-					break;
+			getline(cin, cardInput);
+			
+			if (cardInput.compare("Quit") == 0) {
+				mode = MODE_NOT_SET;
+				// Free the pointer's memory if we stopped in the middle of entering a card.
+				if (newCard)
+					delete newCard;
+				std::cout << "Exiting card input." << endl;
+			}
+			else {
+				if (cardInput.compare("end") == 0 || cardInput.compare("End") == 0)
+					cardInputSuccess = true;
+				else
+					newCard->addFields(cardInput);
 			}
 
-			// Hooray for polymorphism!
+			// Hooray for polymorphism! ^^
 			if (cardInputSuccess) {
-				cout << "Card added successfully!" << endl;
-				newCard->buildCard(cardArgs);
-				cardWorkingSet.insert(newCard);
+				if (newCard->isCardComplete()) {
+					// The Working set owns the pointer now.
+					cardWorkingSet.insert(newCard);
+					std::cout << "Card added successfully!\n" << endl;
+				}
+				else {
+					delete newCard;
+					std::cout << "Card input halted.\n" << endl;
+				}
+				// Set up for a new card to be inserted.
+				switch (mode) {
+					case(MODE_TM) :
+						newCard = new TroubleMaker();
+						break;
+					case(MODE_MC) :
+						newCard = new ManeCharacter();
+						break;
+					case(MODE_FRIEND) :
+						newCard = new Friend();
+						break;
+					case(MODE_RESOURCE) :
+						newCard = new Resource();
+						break;
+					case(MODE_EVENT) :
+						newCard = new Event();
+						break;
+					case(MODE_PROBLEM) :
+						newCard = new Problem();
+						break;
+				}
+				cardInputSuccess = false;
+				std::cout << "New Card:" << endl;
+				std::cout << "Name:";
 			}
 		}
 
 		getline(cin, cardInput);
 	}
-	cout << "Quitting input" << endl;
+	std::cout << "Quitting input" << endl;
 
-	cout << "Cards in working set:" << endl;
+	std::cout << "Cards in working set:" << endl;
 	cardWorkingSet.print();
 }
 
 int main() {
 
-	std::cout << "MLP DeckTracker version 0.4.0" << std::endl;
+	std::cout << "MLP DeckTracker version 0.5.0" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
 	testAddCards();
+
 
 	std::cout << "TEST COMPLETED SUCCESSFULLY" << std::endl;
 }
