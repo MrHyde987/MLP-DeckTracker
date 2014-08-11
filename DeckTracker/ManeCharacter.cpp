@@ -58,7 +58,7 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			}
 		case(2) :
 			// Initial Power
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				modifyPower(StringUtility::stringToInt(inputToAdd));
 				incrementAddedFields();
 				cout << "Initial Home Limit: ";
@@ -70,7 +70,7 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			}
 		case(3) :
 			// Initial Home Limit
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				startHomeLimit = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Flipped Power: ";
@@ -82,7 +82,7 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			}
 		case(4) :
 			// Flipped Power
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				flippedPower = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Flipped Home Limit: ";
@@ -94,7 +94,7 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			}
 		case(5) :
 			// Flipped Home Limit
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				flippedHomeLimit = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Flip Condition: ";

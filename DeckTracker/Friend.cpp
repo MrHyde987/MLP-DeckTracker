@@ -72,7 +72,7 @@ bool Friend::addFields(string inputToAdd) {
 			}
 		case (3) :
 			// Action Cost
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 			modifyActionCost(StringUtility::stringToInt(inputToAdd));
 			incrementAddedFields();
 			cout << "Colour Cost (0 if none): ";
@@ -84,7 +84,7 @@ bool Friend::addFields(string inputToAdd) {
 			}
 		case (4) :
 			// Colour Cost
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 			modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
 			incrementAddedFields();
 			cout << "Faceoff Power: ";
@@ -96,7 +96,7 @@ bool Friend::addFields(string inputToAdd) {
 			}
 		case (5) :
 			// Faceoff Power
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 			modifyPower(StringUtility::stringToInt(inputToAdd));
 			incrementAddedFields();
 			cout << "Special Text: ";

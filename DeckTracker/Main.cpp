@@ -132,7 +132,7 @@ void testAddCards() {
 	}
 	std::cout << "Quitting input" << endl;
 
-	std::cout << "Cards in working set:" << endl;
+	std::cout << "\nCards in working set:" << endl;
 	cardWorkingSet.print();
 }
 

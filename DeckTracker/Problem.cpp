@@ -49,7 +49,7 @@ bool Problem::addFields(string inputToAdd) {
 			return true;
 		case(1) :
 			// Bonus Value
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				pointBonus = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Starting: ";
@@ -87,7 +87,7 @@ bool Problem::addFields(string inputToAdd) {
 			}
 		case(4) :
 			// Primary Colour Confront Cost
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				primaryColourConfrontCost = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Secondary Colour (\"None\" if any): ";
@@ -113,7 +113,7 @@ bool Problem::addFields(string inputToAdd) {
 			}
 		case(6) :
 			// Secondary Colour Confront Cost
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				secondaryColourConfrontCost = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Opponent's Confront Cost: ";
@@ -125,7 +125,7 @@ bool Problem::addFields(string inputToAdd) {
 			}
 		case(7) :
 			// Opponent's Confront Cost
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				neutralConfrontCost = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Special Text: ";

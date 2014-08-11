@@ -38,6 +38,18 @@ bool StringUtility::checkIsInt(string in) {
 	return retVal;
 }
 
+// Verifies that string in can be readily interpreted as a positive
+// integer.
+bool StringUtility::checkIsPositiveInt(string in) {
+
+	bool retVal = checkIsInt(in);
+
+	if (retVal)
+		retVal = (in[0] != '-');
+
+	return retVal;
+}
+
 // Converts a string to an integer, which is exported in toConvert
 // This conversion assumes that the input has been verified with 
 // checkIsInt above, and so does no error-checking.
@@ -87,7 +99,7 @@ bool StringUtility::checkIsBool(string in) {
 	return retValue;
 }
 
-// Safely converts a string to a boolean value. It is assumed
+// Converts a string to a boolean value. It is assumed
 // that string in has already been verified by checkIsBool above,
 // and so no error-checking is done.
 bool StringUtility::stringToBool(string in) {
@@ -143,6 +155,8 @@ void StringUtility::toUpperCase(string &in) {
 	}
 }
 
+// Splits string s based on delimiter delim, placing the resultant substrings
+// in vector elems. Elems is also returned.
 vector<string> &StringUtility::split(string &s, char delim, vector<string> &elems) {
 	stringstream ss(s);
 	string item;

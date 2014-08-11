@@ -20,6 +20,8 @@ public:
 	static bool checkIsInt(string in);
 	static bool checkIsBool(string in);
 	static bool checkIsFloat(string in);
+	static bool checkIsPositiveInt(string in);
+	// Down here -> maybe add a few more good utility functions
 
 	// These actually do the conversions
 	static int stringToInt(string in);

@@ -37,7 +37,7 @@ bool TroubleMaker::addFields(string inputToAdd) {
 			return true;
 		case(1) :
 			// Point Value
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				pointValue = StringUtility::stringToInt(inputToAdd);
 				incrementAddedFields();
 				cout << "Villain? ";
@@ -60,7 +60,7 @@ bool TroubleMaker::addFields(string inputToAdd) {
 			}
 		case(3) :
 			// Faceoff Power
-			if (StringUtility::checkIsInt(inputToAdd)) {
+			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 			modifyPower(StringUtility::stringToInt(inputToAdd));
 			incrementAddedFields();
 			cout << "Special Text: ";
@@ -82,6 +82,5 @@ bool TroubleMaker::addFields(string inputToAdd) {
 }
 
 bool TroubleMaker::isCardComplete() {
-	//cout << boost::format("Access Fields Added: %1% >= NUM FIELDS%2%") % accessFieldsAdded() % NUM_FIELDS << endl;
 	return accessFieldsAdded() >= NUM_FIELDS;
 }
