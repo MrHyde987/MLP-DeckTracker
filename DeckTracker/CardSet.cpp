@@ -1,8 +1,6 @@
 
 #include "CardSet.h"
 
-extern Mode mode;
-
 CardSet::CardSet() {
 	TMSet = new vector<Card*>();
 	MCSet = new vector<Card*>();
@@ -55,35 +53,28 @@ void CardSet::insert(Card* toInsert) {
 	if (prospectiveMember != NULL)
 		prospectiveMember->incrementFrequency();
 	else {
-		switch (mode) {
 
-			case(MODE_TM) :
-				TMSet->push_back(toInsert);
-				break;
-			case(MODE_MC) :
-				MCSet->push_back(toInsert);
-				break;
-			case(MODE_FRIEND) :
-				friendSet->push_back(toInsert);
-				break;
-			case(MODE_RESOURCE) :
-				resourceSet->push_back(toInsert);
-				break;
-			case(MODE_EVENT) :
-				eventSet->push_back(toInsert);
-				break;
-			case(MODE_PROBLEM) :
-				problemSet->push_back(toInsert);
-				break;
-			default:
-				break;
-		}
+        if (dynamic_cast<TroubleMaker*>(toInsert))
+            TMSet->push_back(toInsert);
+        else if (dynamic_cast<ManeCharacter*>(toInsert))
+            MCSet->push_back(toInsert);
+        else if (dynamic_cast<Friend*>(toInsert))
+            friendSet->push_back(toInsert);
+        else if (dynamic_cast<Resource*>(toInsert))
+            resourceSet->push_back(toInsert);
+        else if (dynamic_cast<Event*>(toInsert))
+            eventSet->push_back(toInsert);
+        else if (dynamic_cast<Problem*>(toInsert))
+            problemSet->push_back(toInsert);
+        else
+            cout << "ERROR: Card inserted that does not conform to a valid type." << endl;
 	}
 }
 
 void CardSet::print() {
 
 	unsigned int i = 0;
+    cout << endl;
 	
 	if (TMSet->size() > 0) {
 		cout << "Trouble Makers:\n-------------------------------------" << endl;
@@ -142,28 +133,19 @@ void CardSet::print() {
 Card* CardSet::queryMembership(Card* toQuery) {
 
 	Card* memberFound = NULL;
-	switch (mode) {
-		case(MODE_TM) :
-			memberFound = isVectorMember(TMSet, toQuery);
-			break;
-		case(MODE_MC) :
-			memberFound = isVectorMember(MCSet, toQuery);
-			break;
-		case(MODE_FRIEND) :
-			memberFound = isVectorMember(friendSet, toQuery);
-			break;
-		case(MODE_RESOURCE) :
-			memberFound = isVectorMember(resourceSet, toQuery);
-			break;
-		case(MODE_EVENT) :
-			memberFound = isVectorMember(eventSet, toQuery);
-			break;
-		case(MODE_PROBLEM) :
-			memberFound = isVectorMember(problemSet, toQuery);
-			break;
-		default:
-			break;
-	}
+
+    if (dynamic_cast<TroubleMaker*>(toQuery))
+        memberFound = isVectorMember(TMSet, toQuery);
+    else if (dynamic_cast<ManeCharacter*>(toQuery))
+        memberFound = isVectorMember(MCSet, toQuery);
+    else if (dynamic_cast<Friend*>(toQuery))
+        memberFound = isVectorMember(friendSet, toQuery);
+    else if (dynamic_cast<Resource*>(toQuery))
+        memberFound = isVectorMember(resourceSet, toQuery);
+    else if (dynamic_cast<Event*>(toQuery))
+        memberFound = isVectorMember(eventSet, toQuery);
+    else if (dynamic_cast<Problem*>(toQuery))
+        memberFound = isVectorMember(problemSet, toQuery);
 
 	return memberFound;
 }
