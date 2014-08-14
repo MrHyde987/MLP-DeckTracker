@@ -20,7 +20,7 @@ class Friend : public FRE {
 
 private:
 	Species species;
-	const static int NUM_FIELDS = 6;
+	const static int NUM_FIELDS = 7;
 
 	static Species stringToSpecies(string toSpecies);
 	static string speciesToString(Species toString);
@@ -35,6 +35,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 
 	~Friend();

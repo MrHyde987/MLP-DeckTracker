@@ -14,7 +14,7 @@ public:
 
 	PlayableCard(string name);
 
-	PlayableCard(Colour colour, int power, string name, vector<string> text);
+	PlayableCard(Colour colour, int power, string name, Rarity rarity, vector<string> text);
 	
 	// Abstract Class
 	virtual ~PlayableCard();

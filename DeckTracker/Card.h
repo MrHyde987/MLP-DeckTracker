@@ -7,8 +7,6 @@
 
 using namespace std;
 
-// TODO: Perhaps in Card we could define a protected method for converting
-// colours to strings, to aid in the printing process?
 typedef enum {
 	COLOUR_INVALID,
 	COLOUR_NONE,
@@ -20,11 +18,23 @@ typedef enum {
 	COLOUR_PINK
 } Colour;
 
+typedef enum {
+	RARITY_INVALID,
+	RARITY_COMMON,
+	RARITY_UNCOMMON,
+	RARITY_RARE,
+	RARITY_ULTRA_RARE,
+	RARITY_FIXED,
+	RARITY_FOIL,
+	RARITY_PROMO
+} Rarity;
+
 class Card {
 
 private:
 	int frequency;
 	string name;
+	Rarity rarity;
 	vector<string> specialText;
 
 	// This is a state variable used to track the progress of building a card
@@ -34,11 +44,10 @@ private:
 public:
 	Card();
 	Card(string name);
-	Card(string name, vector<string> text);
+	Card(string name, Rarity rarity, vector<string> text);
 	
 	// Abstract Class
 	virtual void printStats() = 0;
-	// This method will likely replace the above...
 	virtual bool addFields(string inputToAdd) = 0;
 	virtual bool isCardComplete() = 0;
 	
@@ -47,13 +56,14 @@ public:
 	void incrementFrequency();
 	void decrementFrequency();
 
-	// TODO: Add == comparator operator (compare the names to determine equality)
 	bool operator==(Card* toCompare);
 
 protected:
 	string accessName();
+	Rarity accessRarity();
 	vector<string> accessSpecialText();
 	void modifyName(string newName);
+	void modifyRarity(Rarity newRarity);
 	void modifySpecialText(vector<string> newText);
 	void printSpecialText();
 	void pushSpecialText(string textToAdd);
@@ -62,6 +72,9 @@ protected:
 
 	static Colour stringToColour(string toConvert);
 	static string colourToString(Colour toConvert);
+
+	static Rarity stringToRarity(string toConvert);
+	static string rarityToString(Rarity toConvert);
 };
 
 #endif // ndef _CARD_

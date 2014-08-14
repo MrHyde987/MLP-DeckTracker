@@ -8,7 +8,8 @@ PlayableCard::PlayableCard(
 	Colour colour,
 	int power,
 	string name,
-	vector<string> specialText) : Card(name, specialText) {
+	Rarity rarity,
+	vector<string> specialText) : Card(name, rarity, specialText) {
 
 	this->colour = colour;
 	this->power = power;

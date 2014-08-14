@@ -20,6 +20,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 	// Abstract class
 	virtual ~FRE();

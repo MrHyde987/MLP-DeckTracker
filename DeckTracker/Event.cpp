@@ -13,7 +13,8 @@ Event::Event(
 	Colour colour,
 	int power,
 	string name,
-	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {}
+	Rarity rarity,
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, rarity, specialText) {}
 
 Event::~Event() {}
 
@@ -24,62 +25,76 @@ bool Event::isCardComplete() {
 bool Event::addFields(string inputToAdd) {
 	
 	Colour prospectiveColour; // Declared up here to get around C2360
+	Rarity prospectiveRarity;
 
 	switch (accessFieldsAdded()) {
 		case (0) :
 			// Require the name
 			modifyName(inputToAdd);
 			incrementAddedFields();
-			cout << "Colour: ";
+			std::cout << "Rarity: ";
 			return true;
-		case (1) :
+		case(1) :
+			// Rarity
+			prospectiveRarity = Card::stringToRarity(inputToAdd);
+			if (prospectiveRarity != RARITY_INVALID) {
+				modifyRarity(prospectiveRarity);
+				incrementAddedFields();
+				std::cout << "Colour: ";
+				return true;
+			}
+			else {
+				std::cout << "ERROR: Invalid Rarity entered for Event.\nRarity: ";
+				return false;
+			}
+		case (2) :
 			// Require a Colour next
 			prospectiveColour = Card::stringToColour(inputToAdd);
 			if (prospectiveColour != COLOUR_INVALID) {
 				modifyColour(prospectiveColour);
 				incrementAddedFields();
 				// Prompt for next field:
-				cout << "Action Cost: ";
+				std::cout << "Action Cost: ";
 				return true;
 			}
 			else {
-				cout << "ERROR: Invalid colour passed to Event.\nColour :";
+				std::cout << "ERROR: Invalid colour passed to Event.\nColour :";
 				return false;
 			}
-		case (2) :
+		case (3) :
 			// Action Cost
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				modifyActionCost(StringUtility::stringToInt(inputToAdd));
 				incrementAddedFields();
-				cout << "Colour Cost (0 if none): ";
+				std::cout << "Colour Cost (0 if none): ";
 				return true;
 			}
 			else {
-				cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
+				std::cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
 				return false;
 			}
-		case (3) :
+		case (4) :
 			// Colour Cost
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
 				incrementAddedFields();
-				cout << "Faceoff Power: ";
+				std::cout << "Faceoff Power: ";
 				return true;
 			}
 			else {
-				cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
+				std::cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
 				return false;
 			}
-		case (4) :
+		case (5) :
 			// Faceoff Power
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				modifyPower(StringUtility::stringToInt(inputToAdd));
 				incrementAddedFields();
-				cout << "Special Text: ";
+				std::cout << "Special Text: ";
 				return true;
 			}
 			else {
-				cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
+				std::cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
 				return false;
 			}
 		default:
@@ -89,7 +104,7 @@ bool Event::addFields(string inputToAdd) {
 	}
 
 	// The function should not fall through to here.
-	cout << "ERROR: There is a bug in addFields() in Event." << endl;
+	std::cout << "ERROR: There is a bug in addFields() in Event." << endl;
 	return false;
 }
 

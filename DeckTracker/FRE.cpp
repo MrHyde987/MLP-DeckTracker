@@ -10,7 +10,8 @@ FRE::FRE(
 	Colour colour,
 	int power,
 	string name,
-	vector<string> specialText) : PlayableCard(colour, power, name, specialText) {
+	Rarity rarity,
+	vector<string> specialText) : PlayableCard(colour, power, name, rarity, specialText) {
 
 	this->actionCost = actionCost;
 	this->developmentCost = developmentCost;

@@ -20,12 +20,13 @@ Card::Card(string name) : name(name) {
 // NOTE: Even though the dynamic "card-building" methods will not
 // make use of these constructors, they will be important for reading
 // cards from deck and manifest files later on.
-Card::Card(string name, vector<string> specialText) {
+Card::Card(string name, Rarity rarity, vector<string> specialText) {
 
 	// How to deal with frequency when reading in files is a design
 	// decision that has yet to be made.
 	//frequency = 1;
 	this->name = name;
+	this->rarity = rarity;
 	this->specialText = specialText;
 }
 
@@ -55,12 +56,20 @@ string Card::accessName() {
 	return name;
 }
 
+Rarity Card::accessRarity() {
+	return rarity;
+}
+
 vector<string> Card::accessSpecialText() {
 	return specialText;
 }
 
 void Card::modifyName(string newName) {
 	name = newName;
+}
+
+void Card::modifyRarity(Rarity newRarity) {
+	rarity = newRarity;
 }
 
 void Card::modifySpecialText(vector<string> newText) {
@@ -84,6 +93,10 @@ void Card::incrementAddedFields() {
 const int Card::accessFieldsAdded() const {
 	return filledFields;
 }
+
+//////////////////////////////////////////////
+//		Static Enum Converters
+//////////////////////////////////////////////
 
 Colour Card::stringToColour(string toConvert) {
 
@@ -137,6 +150,63 @@ string Card::colourToString(Colour toConvert) {
 			break;
 		default :
 			toRet = "ERROR: Attempted to convert invalid Colour";
+	}
+
+	return toRet;
+}
+
+Rarity Card::stringToRarity(string toConvert) {
+
+	Rarity rarity;
+	StringUtility::toLowerCase(toConvert);
+
+	if (toConvert.compare("common") == 0)
+		rarity = RARITY_COMMON;
+	else if (toConvert.compare("uncommon") == 0)
+		rarity = RARITY_UNCOMMON;
+	else if (toConvert.compare("rare") == 0)
+		rarity = RARITY_RARE;
+	else if (toConvert.compare("ultra rare") == 0)
+		rarity = RARITY_ULTRA_RARE;
+	else if (toConvert.compare("fixed") == 0)
+		rarity = RARITY_FIXED;
+	else if (toConvert.compare("foil") == 0)
+		rarity = RARITY_FOIL;
+	else if (toConvert.compare("promo") == 0)
+		rarity = RARITY_PROMO;
+	else
+		rarity = RARITY_INVALID;
+
+	return rarity;
+}
+
+string Card::rarityToString(Rarity toConvert) {
+
+	string toRet;
+	switch (toConvert) {
+		case (RARITY_COMMON) :
+			toRet = "Common";
+			break;
+		case (RARITY_UNCOMMON) :
+			toRet = "Uncommon";
+			break;
+		case (RARITY_RARE) :
+			toRet = "Rare";
+			break;
+		case (RARITY_ULTRA_RARE) :
+			toRet = "Ultra Rare";
+			break;
+		case (RARITY_FIXED) :
+			toRet = "Fixed";
+			break;
+		case (RARITY_FOIL) :
+			toRet = "Foil";
+			break;
+		case (RARITY_PROMO) :
+			toRet = "Promotional";
+			break;
+		default:
+			toRet = "ERROR: Attempted to convert invalid Rarity";
 	}
 
 	return toRet;

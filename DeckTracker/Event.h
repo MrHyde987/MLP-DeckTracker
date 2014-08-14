@@ -16,6 +16,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 
 	~Event();
@@ -25,6 +26,6 @@ public:
 	bool isCardComplete();
 
 private:
-	const static int NUM_FIELDS = 5;
+	const static int NUM_FIELDS = 6;
 };
 #endif // _EVENT_

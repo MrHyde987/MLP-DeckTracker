@@ -20,7 +20,7 @@ class Resource : public FRE {
 private:
 	Location location;
 	
-	const static int NUM_FIELDS = 6;
+	const static int NUM_FIELDS = 7;
 
 	static Location stringToLocation(string toConvert);
 	static string locationToString(Location toConvert);
@@ -35,6 +35,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 
 	~Resource();

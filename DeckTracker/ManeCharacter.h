@@ -10,7 +10,7 @@ private:
 	int startHomeLimit;
 	int flippedHomeLimit;
 	
-	const static int NUM_FIELDS = 7;
+	const static int NUM_FIELDS = 8;
 
 public:
 
@@ -24,6 +24,7 @@ public:
 		Colour colour,
 		int power,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 
 	~ManeCharacter();
