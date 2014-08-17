@@ -5,6 +5,7 @@
 Card::Card() {
 
 	filledFields = 0;
+	frequency = 1;
 	specialText = vector<string>();
 }
 
@@ -31,14 +32,6 @@ Card::Card(string name, Rarity rarity, vector<string> specialText) {
 }
 
 Card::~Card() {}
-
-void Card::incrementFrequency() {
-	frequency++;
-}
-
-void Card::decrementFrequency() {
-	frequency--;
-}
 
 //////////////////////////////////////////////
 //		Operator Overloads
@@ -68,8 +61,14 @@ void Card::modifyName(string newName) {
 	name = newName;
 }
 
-void Card::modifyRarity(Rarity newRarity) {
-	rarity = newRarity;
+bool Card::modifyRarity(string newRarity) {
+	Rarity prospectiveRarity = stringToRarity(newRarity);
+	if (prospectiveRarity != RARITY_INVALID) {
+		rarity = prospectiveRarity;
+		return true;
+	}
+	else
+		return false;
 }
 
 void Card::modifySpecialText(vector<string> newText) {
@@ -92,6 +91,18 @@ void Card::incrementAddedFields() {
 
 const int Card::accessFieldsAdded() const {
 	return filledFields;
+}
+
+const int Card::accessFrequency() const {
+	return frequency;
+}
+
+void Card::incrementFrequency() {
+	frequency++;
+}
+
+void Card::decrementFrequency() {
+	frequency--;
 }
 
 //////////////////////////////////////////////
@@ -155,6 +166,14 @@ string Card::colourToString(Colour toConvert) {
 	return toRet;
 }
 
+void Card::printAcceptableColours(bool allowNone) {
+	std::cout << "Acceptable Colours: " << endl;
+	std::cout << "Purple\nWhite\nYellow\nPink\nOrange\nBlue\n";
+	
+	// Some kinds are cards are allowed to not have a colour.
+	if (allowNone) std::cout << "None\n";
+}
+
 Rarity Card::stringToRarity(string toConvert) {
 
 	Rarity rarity;
@@ -210,4 +229,9 @@ string Card::rarityToString(Rarity toConvert) {
 	}
 
 	return toRet;
+}
+
+void Card::printAcceptableRarities() {
+	std::cout << "Acceptable Rarities: " << endl;
+	std::cout << "Common\nUncommon\nRare\nUltra Rare\nFixed\nFoil\nPromo\n";
 }

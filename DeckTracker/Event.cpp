@@ -23,51 +23,43 @@ bool Event::isCardComplete() {
 }
 
 bool Event::addFields(string inputToAdd) {
-	
-	Colour prospectiveColour; // Declared up here to get around C2360
-	Rarity prospectiveRarity;
 
 	switch (accessFieldsAdded()) {
 		case (0) :
 			// Require the name
 			modifyName(inputToAdd);
-			incrementAddedFields();
 			std::cout << "Rarity: ";
-			return true;
+			break;
 		case(1) :
 			// Rarity
-			prospectiveRarity = Card::stringToRarity(inputToAdd);
-			if (prospectiveRarity != RARITY_INVALID) {
-				modifyRarity(prospectiveRarity);
-				incrementAddedFields();
+			if (modifyRarity(inputToAdd)) {
 				std::cout << "Colour: ";
-				return true;
+				break;
 			}
 			else {
-				std::cout << "ERROR: Invalid Rarity entered for Event.\nRarity: ";
+				std::cout << "ERROR: Invalid Rarity entered for Event.\n";
+				printAcceptableRarities();
+				std::cout << "Rarity: ";
 				return false;
 			}
 		case (2) :
 			// Require a Colour next
-			prospectiveColour = Card::stringToColour(inputToAdd);
-			if (prospectiveColour != COLOUR_INVALID) {
-				modifyColour(prospectiveColour);
-				incrementAddedFields();
+			if (modifyColour(inputToAdd)) {
 				// Prompt for next field:
 				std::cout << "Action Cost: ";
-				return true;
+				break;
 			}
 			else {
-				std::cout << "ERROR: Invalid colour passed to Event.\nColour :";
+				std::cout << "ERROR: Invalid colour passed to Event.\n";
+				printAcceptableColours(true);
+				std::cout << "Colour: ";
 				return false;
 			}
 		case (3) :
 			// Action Cost
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyActionCost(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
+			if (modifyActionCost(inputToAdd)) {
 				std::cout << "Colour Cost (0 if none): ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
@@ -75,11 +67,9 @@ bool Event::addFields(string inputToAdd) {
 			}
 		case (4) :
 			// Colour Cost
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
+			if (modifyDevelopmentCost(inputToAdd)) {
 				std::cout << "Faceoff Power: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
@@ -87,11 +77,9 @@ bool Event::addFields(string inputToAdd) {
 			}
 		case (5) :
 			// Faceoff Power
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyPower(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
+			if (modifyPower(inputToAdd)) {
 				std::cout << "Special Text: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
@@ -103,14 +91,13 @@ bool Event::addFields(string inputToAdd) {
 			return true;
 	}
 
-	// The function should not fall through to here.
-	std::cout << "ERROR: There is a bug in addFields() in Event." << endl;
-	return false;
+	incrementAddedFields();
+	return true;
 }
 
 void Event::printStats() {
-	std::cout << boost::format("%1%\nAction Cost: %2%\nColour: %3%\nColour Cost: %4%\nSpecial Text:")
-		% accessName() % accessActionCost() % Card::colourToString(accessColour()) 
+	std::cout << boost::format("%1% (%2% Owned)\nAction Cost: %3%\nColour: %4%\nColour Cost: %5%\nSpecial Text:")
+		% accessName() % accessFrequency() % accessActionCost() % Card::colourToString(accessColour()) 
 		% accessDevelopmentCost() << std::endl;
 
 	printSpecialText();

@@ -25,10 +25,22 @@ int PlayableCard::accessPower() {
 	return power;
 }
 
-void PlayableCard::modifyColour(Colour newColour) {
-	colour = newColour;
+bool PlayableCard::modifyColour(string newColour) {
+	Colour prospectiveColour = Card::stringToColour(newColour);
+	if (prospectiveColour != COLOUR_INVALID) {
+		colour = prospectiveColour;
+		return true;
+	}
+	else
+		return false;
 }
 
-void PlayableCard::modifyPower(int newPower) {
-	power = newPower;
+bool PlayableCard::modifyPower(string newPower) {
+	if (StringUtility::checkIsPositiveInt(newPower)) {
+		power = StringUtility::stringToInt(newPower);
+		return true;
+	}
+	else {
+		return false;
+	}
 }

@@ -29,7 +29,7 @@ protected:
 	int accessActionCost();
 	int accessDevelopmentCost();
 
-	void modifyActionCost(int newAC);
-	void modifyDevelopmentCost(int newDC);
+	bool modifyActionCost(string newAC);
+	bool modifyDevelopmentCost(string newDC);
 };
 #endif // _FRE_

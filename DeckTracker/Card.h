@@ -53,28 +53,34 @@ public:
 	
 	virtual ~Card();
 
+	bool operator==(Card* toCompare);
+
 	void incrementFrequency();
 	void decrementFrequency();
-
-	bool operator==(Card* toCompare);
 
 protected:
 	string accessName();
 	Rarity accessRarity();
 	vector<string> accessSpecialText();
+	
 	void modifyName(string newName);
-	void modifyRarity(Rarity newRarity);
+	bool modifyRarity(string newRarity);
 	void modifySpecialText(vector<string> newText);
 	void printSpecialText();
 	void pushSpecialText(string textToAdd);
+	
 	const int accessFieldsAdded() const;
 	void incrementAddedFields();
 
+	const int accessFrequency() const;
+
 	static Colour stringToColour(string toConvert);
 	static string colourToString(Colour toConvert);
+	static void printAcceptableColours(bool allowNone);
 
 	static Rarity stringToRarity(string toConvert);
 	static string rarityToString(Rarity toConvert);
+	static void printAcceptableRarities();
 };
 
 #endif // ndef _CARD_

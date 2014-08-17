@@ -24,6 +24,7 @@ private:
 
 	static Species stringToSpecies(string toSpecies);
 	static string speciesToString(Species toString);
+	static void printAcceptableSpecies();
 
 public:
 	Friend();

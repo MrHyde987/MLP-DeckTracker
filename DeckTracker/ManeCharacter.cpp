@@ -27,15 +27,13 @@ ManeCharacter::~ManeCharacter() {}
 
 void ManeCharacter::printStats() {
 
-	std::cout << boost::format("%1%\nRarity: %2%\nColour: %3%\nPower: %4%\nHome Limit: %5%\nFlipped Power: %6%\nFlipped Home Limit: %7%\nFlip Condition: %8%\nSpecial Text (after flipping):") 
-		% accessName() % Card::rarityToString(accessRarity()) % Card::colourToString(accessColour()) % accessPower() % startHomeLimit
+	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nColour: %4%\nPower: %5%\nHome Limit: %6%\nFlipped Power: %7%\nFlipped Home Limit: %8%\nFlip Condition: %9%\nSpecial Text (after flipping):") 
+		% accessName() % accessFrequency() % Card::rarityToString(accessRarity()) % Card::colourToString(accessColour()) % accessPower() % startHomeLimit
 		% flippedPower % flippedHomeLimit % flipCondition << std::endl;
 	printSpecialText();
 }
 
 bool ManeCharacter::addFields(string inputToAdd) {
-	Colour prospectiveColour;
-	Rarity prospectiveRarity;
 
 	switch (accessFieldsAdded()) {
 		case(0) :
@@ -46,38 +44,34 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			return true;
 		case(1) :
 			// Rarity
-			prospectiveRarity = Card::stringToRarity(inputToAdd);
-			if (prospectiveRarity != RARITY_INVALID) {
-				modifyRarity(prospectiveRarity);
-				incrementAddedFields();
+			if (modifyRarity(inputToAdd)) {
 				std::cout << "Colour: ";
-				return true;
+				break;
 			}
 			else {
-				std::cout << "ERROR: Invalid Rarity entered for Mane Character.\nRarity: ";
+				std::cout << "ERROR: Invalid Rarity entered for Mane Character.\n";
+				Card::printAcceptableRarities();
+				std::cout << "Rarity: ";
 				return false;
 			}
 		case(2) :
 			// Require a Colour next
-			prospectiveColour = Card::stringToColour(inputToAdd);
-			if (prospectiveColour != COLOUR_INVALID) {
-				modifyColour(prospectiveColour);
-				incrementAddedFields();
+			if (modifyColour(inputToAdd)) {
 				// Prompt for next field:
 				std::cout << "Initial Power: ";
-				return true;
+				break;
 			}
 			else {
-				std::cout << "ERROR: Invalid colour passed to Mane Character.\nColour :";
+				std::cout << "ERROR: Invalid colour passed to Mane Character.\n";
+				Card::printAcceptableColours(false);
+				std::cout << "Colour: ";
 				return false;
 			}
 		case(3) :
 			// Initial Power
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyPower(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
+			if (modifyPower(inputToAdd)) {
 				std::cout << "Initial Home Limit: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Initial Power entered for Mane Character.\nInitial Power: ";
@@ -87,9 +81,8 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			// Initial Home Limit
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				startHomeLimit = StringUtility::stringToInt(inputToAdd);
-				incrementAddedFields();
 				std::cout << "Flipped Power: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Initial Home Limit entered for Mane Character.\nInitial Home Limit: ";
@@ -99,9 +92,8 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			// Flipped Power
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				flippedPower = StringUtility::stringToInt(inputToAdd);
-				incrementAddedFields();
 				std::cout << "Flipped Home Limit: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Flipped Power entered for Mane Character.\nFlipped Power: ";
@@ -111,9 +103,8 @@ bool ManeCharacter::addFields(string inputToAdd) {
 			// Flipped Home Limit
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				flippedHomeLimit = StringUtility::stringToInt(inputToAdd);
-				incrementAddedFields();
 				std::cout << "Flip Condition: ";
-				return true;
+				break;
 			}
 			else {
 				std::cout << "ERROR: Invalid Flipped Home Limit entered for Mane Character.\nFlipped Home Limit: ";
@@ -122,18 +113,16 @@ bool ManeCharacter::addFields(string inputToAdd) {
 		case(7) :
 			// All manes have a flip condition
 			flipCondition = inputToAdd;
-			incrementAddedFields();
 			std::cout << "Special Text (in Boosted State): ";
-			return true;
+			break;
 		default :
 			// Special Text is being added
 			pushSpecialText(inputToAdd);
 			return true;
 	}
 
-	// Execution should not fall through to here.
-	std::cout << "ERROR: There is a bug in ManeCharacter::addFields" << endl;
-	return false;
+	incrementAddedFields();
+	return true;
 }
 
 bool ManeCharacter::isCardComplete() {

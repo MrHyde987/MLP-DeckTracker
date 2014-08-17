@@ -11,7 +11,6 @@ Mode mode = MODE_NOT_SET;
 void testAddCards() {
 
 	string cardInput;
-	bool newModeSelected = false;
 	bool cardInputSuccess = false;
 
 	CardSet cardWorkingSet;
@@ -21,56 +20,49 @@ void testAddCards() {
 	std::cout << "Let's add some cards" << endl;
 
 	std::cout << "First, specify the type of card that you are adding: (Choose one) " << endl;
-	std::cout << "Trouble Maker" << endl << "Mane Character" << endl << "Friend" << endl
-		<< "Resource" << endl << "Event" << endl << "Problem" << endl << "\"Quit\" to quit"<< endl;
+	std::cout << "Trouble Maker\nMane Character\nFriend\nResource\nEvent\nProblem\n\"Quit\" to quit"<< endl;
 
 	getline(cin, cardInput);
 	while (cardInput.compare("Quit") != 0) {
 
-		newModeSelected = false;
-
-		// At any time, entering a new mode switches, so these checks are
-		// always run.
 		if (cardInput.compare("Trouble Maker") == 0) {
 			std::cout << "In entry mode: Trouble Maker" << endl;
 			mode = MODE_TM;
 			newCard = new TroubleMaker();
-			newModeSelected = true;
 		}
 		else if (cardInput.compare("Mane Character") == 0) {
 			std::cout << "In entry mode: Mane Character" << endl;
 			mode = MODE_MC;
 			newCard = new ManeCharacter();
-			newModeSelected = true;
 		}
 		else if (cardInput.compare("Friend") == 0) {
 			std::cout << "In entry mode: Friend" << endl;
 			mode = MODE_FRIEND;
 			newCard = new Friend();
-			newModeSelected = true;
 		}
 		else if (cardInput.compare("Resource") == 0) {
 			std::cout << "In entry mode: Resource" << endl;
 			mode = MODE_RESOURCE;
 			newCard = new Resource();
-			newModeSelected = true;
 		}
 		else if (cardInput.compare("Event") == 0) {
 			std::cout << "In entry mode: Event" << endl;
 			mode = MODE_EVENT;
 			newCard = new Event();
-			newModeSelected = true;
 		}
 		else if (cardInput.compare("Problem") == 0) {
 			std::cout << "In entry mode: Problem" << endl;
 			mode = MODE_PROBLEM;
 			newCard = new Problem();
-			newModeSelected = true;
 		}
+		else
+			std::cout << "ERROR: Not a valid mode." << endl;
 
-		// Every card starts with a name, so prompt for one.
-		std::cout << "Entering new Card:" << endl;
-		std::cout << "Name: ";
+		if (mode != MODE_NOT_SET) {
+			// Every card starts with a name, so prompt for one.
+			std::cout << "Entering new Card:" << endl;
+			std::cout << "Name: ";
+		}
 
 		while (mode != MODE_NOT_SET) {
 
@@ -82,6 +74,8 @@ void testAddCards() {
 				if (newCard)
 					delete newCard;
 				std::cout << "Exiting card input." << endl;
+				std::cout << "Choose a new entrance mode" << endl;
+				std::cout << "Trouble Maker\nMane Character\nFriend\nResource\nEvent\nProblem\n\"Quit\" to quit" << endl;
 			}
 			else {
 				if (cardInput.compare("end") == 0 || cardInput.compare("End") == 0)
@@ -138,7 +132,7 @@ void testAddCards() {
 
 int main() {
 
-	std::cout << "MLP DeckTracker version 0.5.2" << std::endl;
+	std::cout << "MLP DeckTracker version 0.5.4" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
 	testAddCards();

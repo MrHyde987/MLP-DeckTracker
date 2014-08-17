@@ -1,6 +1,7 @@
 #ifndef _PLAYABLE_CARD_
 #define _PLAYABLE_CARD_
 #include "Card.h"
+#include "StringUtility.h"
 
 class PlayableCard : public Card {
 
@@ -23,7 +24,7 @@ protected:
 	Colour accessColour();
 	int accessPower();
 
-	void modifyColour(Colour newColour);
-	void modifyPower(int newPower);
+	bool modifyColour(string newColour);
+	bool modifyPower(string newPower);
 };
 #endif // _PLAYABLE_CARD_

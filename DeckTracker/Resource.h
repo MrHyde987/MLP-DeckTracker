@@ -24,6 +24,7 @@ private:
 
 	static Location stringToLocation(string toConvert);
 	static string locationToString(Location toConvert);
+	static void printAcceptableLocations();
 
 public:
 	Resource();
