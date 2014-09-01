@@ -2,29 +2,11 @@
 #define _FRIEND_
 #include "FRE.h"
 
-typedef enum {
-	
-	SPECIES_INVALID,
-	SPECIES_UNICORN,
-	SPECIES_PEGASUS,
-	SPECIES_EP,
-	SPECIES_ALICORN,
-	SPECIES_ZEBRA,
-	SPECIES_CRITTER,
-	SPECIES_DRAGON,
-	SPECIES_BUFFALO
-
-} Species;
-
 class Friend : public FRE {
 
 private:
 	Species species;
-	const static int NUM_FIELDS = 7;
-
-	static Species stringToSpecies(string toSpecies);
-	static string speciesToString(Species toString);
-	static void printAcceptableSpecies();
+	const static int NUM_FIELDS = 8;
 
 public:
 	Friend();
@@ -35,6 +17,7 @@ public:
 		int developmentCost,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
 		Rarity rarity,
 		vector<string> specialText);

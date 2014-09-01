@@ -10,9 +10,10 @@ Resource::Resource(
 	int developmentCost,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
 	Rarity rarity,
-	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, rarity, specialText) {
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, typeModifiers, name, rarity, specialText) {
 
 	this->location = location;
 }
@@ -21,9 +22,10 @@ Resource::~Resource() {}
 
 void Resource::printStats() {
 
-	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nAction Cost: %4%\nColour: %5%\nColour Cost: %6%\nPower: %7%\nLocation: %8%\nSpecial Text:")
+	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nAction Cost: %4%\nColour: %5%\nColour Cost: %6%\nPower: %7%\nLocation: %8%")
 		% accessName() % accessFrequency() % Card::rarityToString(accessRarity()) % accessActionCost() % Card::colourToString(accessColour()) % accessDevelopmentCost() 
 		% accessPower() % locationToString(location) << std::endl;
+	printTypeModifiers();
 	printSpecialText();
 }
 
@@ -35,12 +37,18 @@ bool Resource::addFields(string inputToAdd) {
 
 		case(0) :
 			// Require the name
-			modifyName(inputToAdd);
-			std::cout << "Rarity: ";
-			break;
+			if (modifyName(inputToAdd)) {
+				std::cout << "Rarity: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid name entered for Resource.\n";
+				std::cout << "Name: ";
+				return false;
+			}
 		case(1) :
 			if (modifyRarity(inputToAdd)) {
-				std::cout << "Colour: ";
+				std::cout << "Type Modifiers (e.g. Report etc.): ";
 				break;
 			}
 			else {
@@ -49,7 +57,15 @@ bool Resource::addFields(string inputToAdd) {
 				std::cout << "Rarity: ";
 				return false;
 			}
-		case(2) :
+		case (2) :
+			// Type Modifiers
+			if (pushTypeModifier(inputToAdd))
+				return true;
+			else {
+				std::cout << "Colour: ";
+				break;
+			}
+		case(3) :
 			// Require a Colour next
 			if (modifyColour(inputToAdd)) {
 				// Prompt for next field:
@@ -62,7 +78,7 @@ bool Resource::addFields(string inputToAdd) {
 				std::cout << "Colour: ";
 				return false;
 			}
-		case(3) :
+		case(4) :
 			// Action Cost
 			if (modifyActionCost(inputToAdd)) {
 				std::cout << "Colour Cost (0 if none): ";
@@ -72,7 +88,7 @@ bool Resource::addFields(string inputToAdd) {
 				std::cout << "ERROR: Invalid Action Cost entered for Resource.\nAction Cost: ";
 				return false;
 			}
-		case(4) :
+		case(5) :
 			// Colour Cost
 			if (modifyDevelopmentCost(inputToAdd)) {
 				std::cout << "Faceoff Power: ";
@@ -82,7 +98,7 @@ bool Resource::addFields(string inputToAdd) {
 				std::cout << "ERROR: Invalid Colour Cost entered for Resource.\nColour Cost (0 if none): ";
 				return false;
 			}
-		case(5) :
+		case(6) :
 			// Faceoff Power
 			if (modifyPower(inputToAdd)) {
 				std::cout << "Location: ";
@@ -92,7 +108,7 @@ bool Resource::addFields(string inputToAdd) {
 				std::cout << "ERROR: Invalid Faceoff Power entered for Resource.\nFaceoff Power: ";
 				return false;
 			}
-		case(6) :
+		case(7) :
 			// Location
 			prospectiveLocation = stringToLocation(inputToAdd);
 			if (prospectiveLocation != LOCATION_INVALID) {

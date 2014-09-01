@@ -12,9 +12,10 @@ Event::Event(
 	int developmentCost,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
 	Rarity rarity,
-	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, rarity, specialText) {}
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, typeModifiers, name, rarity, specialText) {}
 
 Event::~Event() {}
 
@@ -27,13 +28,19 @@ bool Event::addFields(string inputToAdd) {
 	switch (accessFieldsAdded()) {
 		case (0) :
 			// Require the name
-			modifyName(inputToAdd);
-			std::cout << "Rarity: ";
-			break;
+			if (modifyName(inputToAdd)) {
+				std::cout << "Rarity: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid name entered for Event.\n";
+				std::cout << "Name: ";
+				return false;
+			}
 		case(1) :
 			// Rarity
 			if (modifyRarity(inputToAdd)) {
-				std::cout << "Colour: ";
+				std::cout << "Type Modifiers (e.g. Gotcha etc.): ";
 				break;
 			}
 			else {
@@ -43,9 +50,16 @@ bool Event::addFields(string inputToAdd) {
 				return false;
 			}
 		case (2) :
+			// Type Modifiers
+			if (pushTypeModifier(inputToAdd))
+				return true;
+			else {
+				std::cout << "Colour: ";
+				break;
+			}
+		case (3) :
 			// Require a Colour next
 			if (modifyColour(inputToAdd)) {
-				// Prompt for next field:
 				std::cout << "Action Cost: ";
 				break;
 			}
@@ -55,7 +69,7 @@ bool Event::addFields(string inputToAdd) {
 				std::cout << "Colour: ";
 				return false;
 			}
-		case (3) :
+		case (4) :
 			// Action Cost
 			if (modifyActionCost(inputToAdd)) {
 				std::cout << "Colour Cost (0 if none): ";
@@ -65,7 +79,7 @@ bool Event::addFields(string inputToAdd) {
 				std::cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
 				return false;
 			}
-		case (4) :
+		case (5) :
 			// Colour Cost
 			if (modifyDevelopmentCost(inputToAdd)) {
 				std::cout << "Faceoff Power: ";
@@ -75,7 +89,7 @@ bool Event::addFields(string inputToAdd) {
 				std::cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
 				return false;
 			}
-		case (5) :
+		case (6) :
 			// Faceoff Power
 			if (modifyPower(inputToAdd)) {
 				std::cout << "Special Text: ";
@@ -96,9 +110,9 @@ bool Event::addFields(string inputToAdd) {
 }
 
 void Event::printStats() {
-	std::cout << boost::format("%1% (%2% Owned)\nAction Cost: %3%\nColour: %4%\nColour Cost: %5%\nSpecial Text:")
+	std::cout << boost::format("%1% (%2% Owned)\nAction Cost: %3%\nColour: %4%\nColour Cost: %5%")
 		% accessName() % accessFrequency() % accessActionCost() % Card::colourToString(accessColour()) 
 		% accessDevelopmentCost() << std::endl;
-
+	printTypeModifiers();
 	printSpecialText();
 }

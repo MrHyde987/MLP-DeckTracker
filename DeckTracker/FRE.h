@@ -19,6 +19,7 @@ public:
 		int developmentCost,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
 		Rarity rarity,
 		vector<string> specialText);

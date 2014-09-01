@@ -5,12 +5,15 @@
 class ManeCharacter : public PlayableCard {
 
 private:
-	string flipCondition;
-	int flippedPower;
+	string startFlipCondition;
+	string boostedFlipCondition;
+	Species species;
+	int boostedPower;
 	int startHomeLimit;
-	int flippedHomeLimit;
+	int boostedHomeLimit;
+	string startSpecialText;
 	
-	const static int NUM_FIELDS = 8;
+	const static int NUM_FIELDS = 12;
 
 public:
 
@@ -18,13 +21,17 @@ public:
 	ManeCharacter(string name);
 	ManeCharacter(
 		string flipCondition,
+		string boostedFlipCondition,
+		Species species,
 		int flippedPower,
 		int startHomeLimit,
 		int flippedHomeLimit,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
 		Rarity rarity,
+		string startSpecialText,
 		vector<string> specialText);
 
 	~ManeCharacter();

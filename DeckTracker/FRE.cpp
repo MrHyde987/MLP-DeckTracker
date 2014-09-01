@@ -9,9 +9,10 @@ FRE::FRE(
 	int developmentCost,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
 	Rarity rarity,
-	vector<string> specialText) : PlayableCard(colour, power, name, rarity, specialText) {
+	vector<string> specialText) : PlayableCard(colour, power, typeModifiers, name, rarity, specialText) {
 
 	this->actionCost = actionCost;
 	this->developmentCost = developmentCost;
@@ -44,3 +45,4 @@ bool FRE::modifyDevelopmentCost(string newDC) {
 	else
 		return false;
 }
+

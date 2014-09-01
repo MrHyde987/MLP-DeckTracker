@@ -63,7 +63,7 @@ protected:
 	Rarity accessRarity();
 	vector<string> accessSpecialText();
 	
-	void modifyName(string newName);
+	bool modifyName(string newName);
 	bool modifyRarity(string newRarity);
 	void modifySpecialText(vector<string> newText);
 	void printSpecialText();

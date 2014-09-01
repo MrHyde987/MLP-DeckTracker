@@ -57,8 +57,15 @@ vector<string> Card::accessSpecialText() {
 	return specialText;
 }
 
-void Card::modifyName(string newName) {
+bool Card::modifyName(string newName) {
 	name = newName;
+
+	if (newName.compare("") != 0) {
+		name = newName;
+		return true;
+	}
+	else
+		return false;
 }
 
 bool Card::modifyRarity(string newRarity) {
@@ -76,8 +83,15 @@ void Card::modifySpecialText(vector<string> newText) {
 }
 
 void Card::printSpecialText() {
-	for (unsigned int i = 0; i < specialText.size(); ++i) {
-		std::cout << specialText[i] << endl;
+
+	std::cout << "Special Text: ";
+
+	if (specialText.size() == 0)
+		std::cout << "N/A" << endl;
+	else {
+		for (unsigned int i = 0; i < specialText.size(); ++i) {
+			std::cout << specialText[i] << endl;
+		}
 	}
 }
 

@@ -15,6 +15,7 @@ public:
 		int developmentCost,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
 		Rarity rarity,
 		vector<string> specialText);
@@ -26,6 +27,6 @@ public:
 	bool isCardComplete();
 
 private:
-	const static int NUM_FIELDS = 6;
+	const static int NUM_FIELDS = 7;
 };
 #endif // _EVENT_

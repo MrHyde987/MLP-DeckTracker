@@ -29,7 +29,7 @@ Problem::Problem(
 Problem::~Problem() {}
 
 void Problem::printStats() {
-	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nPrimary Colour/Cost: %4%/%5%\nSecondary Colour/Cost: %6%/%7%\nNeutral Cost: %8%\nBonus: %9%\nStarting: %10%\nSpecial Text:") 
+	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nPrimary Colour/Cost: %4%/%5%\nSecondary Colour/Cost: %6%/%7%\nNeutral Cost: %8%\nBonus: %9%\nStarting: %10%") 
 		% accessName() % accessFrequency() % Card::rarityToString(accessRarity()) % Card::colourToString(primaryColour) % primaryColourConfrontCost 
 		% Card::colourToString(secondaryColour) % secondaryColourConfrontCost % neutralConfrontCost % pointBonus 
 		% (isStarting ? "True" : "False") << std::endl;
@@ -45,9 +45,14 @@ bool Problem::addFields(string inputToAdd) {
 
 		case(0) :
 			// Require the name
-			modifyName(inputToAdd);
-			std::cout << "Card Rarity: ";
-			break;
+			if (modifyName(inputToAdd)) {
+				std::cout << "Card Rarity: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid name entered for Problem.\nName: ";
+				return false;
+			}
 		case(1) :
 			// Rarity
 			prospectiveRarity = Card::stringToRarity(inputToAdd);
