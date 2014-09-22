@@ -2,17 +2,20 @@
 #include "CardSet.h"
 
 CardSet::CardSet() {
-	TMSet = new vector<Card*>();
-	MCSet = new vector<Card*>();
-	friendSet = new vector<Card*>();
-	resourceSet = new vector<Card*>();
-	eventSet = new vector<Card*>();
-	problemSet = new vector<Card*>();
+
+	TMSet = new vector<TroubleMaker*>();
+	MCSet = new vector<ManeCharacter*>();
+	friendSet = new vector<Friend*>();
+	resourceSet = new vector<Resource*>();
+	eventSet = new vector<Event*>();
+	problemSet = new vector<Problem*>();
+
+    cardsManifest = fstream();
 }
 
 CardSet::~CardSet() {
 
-	unsigned int i = 0;
+	iter_t i = 0;
 
 	for (; i < TMSet->size(); ++i) {
 		delete (*TMSet)[i];
@@ -45,6 +48,18 @@ CardSet::~CardSet() {
 	delete problemSet;
 }
 
+void CardSet::populate(vector<Card*> cardsFromFile) {
+
+    Card* currCard = NULL;
+
+    for (iter_t i = 0; i < cardsFromFile.size(); ++i) {
+
+        currCard = cardsFromFile[i];
+        if (currCard != NULL)
+            insert(currCard);
+    }
+}
+
 void CardSet::insert(Card* toInsert) {
 
 	Card* prospectiveMember = NULL;
@@ -55,17 +70,17 @@ void CardSet::insert(Card* toInsert) {
 	else {
 
         if (dynamic_cast<TroubleMaker*>(toInsert))
-            TMSet->push_back(toInsert);
+            TMSet->push_back(dynamic_cast<TroubleMaker*>(toInsert));
         else if (dynamic_cast<ManeCharacter*>(toInsert))
-            MCSet->push_back(toInsert);
+            MCSet->push_back(dynamic_cast<ManeCharacter*>(toInsert));
         else if (dynamic_cast<Friend*>(toInsert))
-            friendSet->push_back(toInsert);
+            friendSet->push_back(dynamic_cast<Friend*>(toInsert));
         else if (dynamic_cast<Resource*>(toInsert))
-            resourceSet->push_back(toInsert);
+            resourceSet->push_back(dynamic_cast<Resource*>(toInsert));
         else if (dynamic_cast<Event*>(toInsert))
-            eventSet->push_back(toInsert);
+            eventSet->push_back(dynamic_cast<Event*>(toInsert));
         else if (dynamic_cast<Problem*>(toInsert))
-            problemSet->push_back(toInsert);
+            problemSet->push_back(dynamic_cast<Problem*>(toInsert));
         else
             cout << "ERROR: Card inserted that does not conform to a valid type." << endl;
 	}
@@ -73,7 +88,7 @@ void CardSet::insert(Card* toInsert) {
 
 void CardSet::print() {
 
-	unsigned int i = 0;
+	iter_t i = 0;
     cout << endl;
 	
 	if (TMSet->size() > 0) {
@@ -126,6 +141,45 @@ void CardSet::print() {
 	}
 }
 
+void CardSet::saveToFile() {
+
+    cardsManifest.open("Test_Manifest.cards", FILE_OUT | FILE_APPEND);
+
+    if (cardsManifest.is_open()) {
+        
+        iter_t i = 0;
+
+        for (; i < TMSet->size(); ++i) {
+            // Call out to getManifestString for the Troublemakers etc.
+        }
+
+        for (i = 0; i < MCSet->size(); ++i) {
+
+        }
+
+        for (i = 0; i < friendSet->size(); ++i) {
+
+        }
+
+        for (i = 0; i < resourceSet->size(); ++i) {
+
+        }
+
+        for (i = 0; i < eventSet->size(); ++i) {
+
+        }
+
+        for (i = 0; i < problemSet->size(); ++i) {
+
+        }
+    }
+    cardsManifest.close();
+}
+
+bool CardSet::loadFromFile() {
+    return false;
+}
+
 ///////////////////////////////////////////////////
 // Private Helper Functions
 ///////////////////////////////////////////////////
@@ -135,27 +189,28 @@ Card* CardSet::queryMembership(Card* toQuery) {
 	Card* memberFound = NULL;
 
     if (dynamic_cast<TroubleMaker*>(toQuery))
-        memberFound = isVectorMember(TMSet, toQuery);
+        memberFound = isVectorMember(TMSet, dynamic_cast<TroubleMaker*>(toQuery));
     else if (dynamic_cast<ManeCharacter*>(toQuery))
-        memberFound = isVectorMember(MCSet, toQuery);
+        memberFound = isVectorMember(MCSet, dynamic_cast<ManeCharacter*>(toQuery));
     else if (dynamic_cast<Friend*>(toQuery))
-        memberFound = isVectorMember(friendSet, toQuery);
+        memberFound = isVectorMember(friendSet, dynamic_cast<Friend*>(toQuery));
     else if (dynamic_cast<Resource*>(toQuery))
-        memberFound = isVectorMember(resourceSet, toQuery);
+        memberFound = isVectorMember(resourceSet, dynamic_cast<Resource*>(toQuery));
     else if (dynamic_cast<Event*>(toQuery))
-        memberFound = isVectorMember(eventSet, toQuery);
+        memberFound = isVectorMember(eventSet, dynamic_cast<Event*>(toQuery));
     else if (dynamic_cast<Problem*>(toQuery))
-        memberFound = isVectorMember(problemSet, toQuery);
+        memberFound = isVectorMember(problemSet, dynamic_cast<Problem*>(toQuery));
 
 	return memberFound;
 }
 
-Card* CardSet::isVectorMember(vector<Card*>* toQuery, Card* queryItem) {
+template<typename T>
+Card* CardSet::isVectorMember(vector<T*>* toQuery, T* queryItem) {
 
 	bool isMember = false;
 	Card* memberFound = NULL;
 
-	for (unsigned int i = 0; i < toQuery->size() && !isMember; ++i) {
+	for (iter_t i = 0; i < toQuery->size() && !isMember; ++i) {
 		isMember = *((*toQuery)[i]) == (queryItem);
 		if (isMember)
 			memberFound = (*toQuery)[i];

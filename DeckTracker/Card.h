@@ -7,6 +7,9 @@
 
 using namespace std;
 
+// Sick of typing "unsigned int" on all of my loops.
+typedef unsigned int iter_t;
+
 // TODO: Perhaps in Card we could define a protected method for converting
 // colours to strings, to aid in the printing process?
 typedef enum {
@@ -41,6 +44,8 @@ public:
 	// This method will likely replace the above...
 	virtual bool addFields(string inputToAdd) = 0;
 	virtual bool isCardComplete() = 0;
+    virtual string getManifestString() = 0;
+    // virtual Card* parseManifestEntry(string entry) = 0;
 	
 	virtual ~Card();
 

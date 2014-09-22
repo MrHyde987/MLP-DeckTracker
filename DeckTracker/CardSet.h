@@ -5,6 +5,7 @@
 #include "Main.h" // for the Mode enum
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 class Card;
 using namespace std;
@@ -15,17 +16,28 @@ using namespace std;
 // of optimizing query time.
 class CardSet {
 
+#define FILE_OUT    std::fstream::out
+#define FILE_IN     std::fstream::in
+#define FILE_BIN    std::fstream::binary
+#define FILE_ATE    std::fstream::ate
+#define FILE_APPEND std::fstream::app
+#define FILE_TRUNC  std::fstream::trunc
+
 private:
-	vector<Card*>* TMSet;
-	vector<Card*>* MCSet;
-	vector<Card*>* friendSet;
-	vector<Card*>* resourceSet;
-	vector<Card*>* eventSet;
-	vector<Card*>* problemSet;
+	vector<TroubleMaker*>* TMSet;
+	vector<ManeCharacter*>* MCSet;
+	vector<Friend*>* friendSet;
+	vector<Resource*>* resourceSet;
+	vector<Event*>* eventSet;
+	vector<Problem*>* problemSet;
+
+    fstream cardsManifest;
 
 	// TODO: Move this to some generic location so that others can use it.
-	Card* isVectorMember(vector<Card*>* toQuery, Card* queryItem);
-	Card* queryMembership(Card* toQuery);
+	template<typename T>
+    Card* isVectorMember(vector<T*>* toQuery, T* queryItem);
+	
+    Card* queryMembership(Card* toQuery);
 
 public:
 	CardSet();
@@ -35,6 +47,11 @@ public:
 	void insert(Card* toInsert);
 	
 	void print();
+
+    void populate(vector<Card*> cardsFromFile);
+
+    void saveToFile();
+    bool loadFromFile();
 };
 
 #endif // _CARD_SET_

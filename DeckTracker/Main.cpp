@@ -138,11 +138,22 @@ void testAddCards() {
 
 int main() {
 
+    // TODO: Plenty of stuff here. We'll want some actual initialization to take place here in
+    //       main. On start:
+    //       1. Check for the presence of a .cards manifest, and load it if possible.
+    //       2. Present the user with the main menu, from which they can query the CardSet or add cards
+    //          to it.
+    //       3. Take them to the proper section of the program based on their selection, then exit when
+    //          necessary.
+
 	std::cout << "MLP DeckTracker version 0.5.2" << std::endl;
 	std::cout << "Written by Carl Hyde" << std::endl << std::endl;
 
-	testAddCards();
+	//testAddCards();
 
+    CardSet test = CardSet();
+
+    test.saveToFile();
 
 	std::cout << "TEST COMPLETED SUCCESSFULLY" << std::endl;
 }
