@@ -9,8 +9,10 @@ FRE::FRE(
 	int developmentCost,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
-	vector<string> specialText) : PlayableCard(colour, power, name, specialText) {
+	Rarity rarity,
+	vector<string> specialText) : PlayableCard(colour, power, typeModifiers, name, rarity, specialText) {
 
 	this->actionCost = actionCost;
 	this->developmentCost = developmentCost;
@@ -26,10 +28,21 @@ int FRE::accessDevelopmentCost() {
 	return developmentCost;
 }
 
-void FRE::modifyActionCost(int newAC) {
-	actionCost = newAC;
+bool FRE::modifyActionCost(string newAC) {
+	if (StringUtility::checkIsPositiveInt(newAC)) {
+		actionCost = StringUtility::stringToInt(newAC);
+		return true;
+	}
+	else
+		return false;
 }
 
-void FRE::modifyDevelopmentCost(int newDC) {
-	developmentCost = newDC;
+bool FRE::modifyDevelopmentCost(string newDC) {
+	if (StringUtility::checkIsPositiveInt(newDC)) {
+		developmentCost = StringUtility::stringToInt(newDC);
+		return true;
+	}
+	else
+		return false;
 }
+

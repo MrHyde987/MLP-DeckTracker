@@ -92,52 +92,52 @@ void CardSet::print() {
     cout << endl;
 	
 	if (TMSet->size() > 0) {
-		cout << "Trouble Makers:\n-------------------------------------" << endl;
+		std::cout << "Trouble Makers:\n-------------------------------------" << endl;
 		for (; i < TMSet->size(); ++i) {
 			TMSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 	if (MCSet->size() > 0) {
-		cout << "Mane Characters:\n-------------------------------------" << endl;
+		std::cout << "Mane Characters:\n-------------------------------------" << endl;
 		for (i = 0; i < MCSet->size(); ++i) {
 			MCSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 	if (friendSet->size() > 0) {
-		cout << "Friends:\n-------------------------------------" << endl;
+		std::cout << "Friends:\n-------------------------------------" << endl;
 		for (i = 0; i < friendSet->size(); ++i) {
 			friendSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 	if (resourceSet->size() > 0) {
-		cout << "Resources:\n-------------------------------------" << endl;
+		std::cout << "Resources:\n-------------------------------------" << endl;
 		for (i = 0; i < resourceSet->size(); ++i) {
 			resourceSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 	if (eventSet->size() > 0) {
-		cout << "Events:\n-------------------------------------" << endl;
+		std::cout << "Events:\n-------------------------------------" << endl;
 		for (i = 0; i < eventSet->size(); ++i) {
 			eventSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 	if (problemSet->size() > 0) {
-		cout << "Problems:\n-------------------------------------" << endl;
+		std::cout << "Problems:\n-------------------------------------" << endl;
 		for (i = 0; i < problemSet->size(); ++i) {
 			problemSet->at(i)->printStats();
-			cout << endl;
+			std::cout << endl;
 		}
-		cout << endl;
+		std::cout << endl;
 	}
 }
 

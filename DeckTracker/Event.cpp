@@ -12,8 +12,10 @@ Event::Event(
 	int developmentCost,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
-	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, name, specialText) {}
+	Rarity rarity,
+	vector<string> specialText) : FRE(actionCost, developmentCost, colour, power, typeModifiers, name, rarity, specialText) {}
 
 Event::~Event() {}
 
@@ -22,64 +24,79 @@ bool Event::isCardComplete() {
 }
 
 bool Event::addFields(string inputToAdd) {
-	
-	Colour prospectiveColour; // Declared up here to get around C2360
 
 	switch (accessFieldsAdded()) {
 		case (0) :
 			// Require the name
-			modifyName(inputToAdd);
-			incrementAddedFields();
-			cout << "Colour: ";
-			return true;
-		case (1) :
-			// Require a Colour next
-			prospectiveColour = Card::stringToColour(inputToAdd);
-			if (prospectiveColour != COLOUR_INVALID) {
-				modifyColour(prospectiveColour);
-				incrementAddedFields();
-				// Prompt for next field:
-				cout << "Action Cost: ";
-				return true;
+			if (modifyName(inputToAdd)) {
+				std::cout << "Rarity: ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid colour passed to Event.\nColour :";
+				std::cout << "ERROR: Invalid name entered for Event.\n";
+				std::cout << "Name: ";
+				return false;
+			}
+		case(1) :
+			// Rarity
+			if (modifyRarity(inputToAdd)) {
+				std::cout << "Type Modifiers (e.g. Gotcha etc.): ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid Rarity entered for Event.\n";
+				printAcceptableRarities();
+				std::cout << "Rarity: ";
 				return false;
 			}
 		case (2) :
-			// Action Cost
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyActionCost(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
-				cout << "Colour Cost (0 if none): ";
+			// Type Modifiers
+			if (pushTypeModifier(inputToAdd))
 				return true;
-			}
 			else {
-				cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
-				return false;
+				std::cout << "Colour: ";
+				break;
 			}
 		case (3) :
-			// Colour Cost
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyDevelopmentCost(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
-				cout << "Faceoff Power: ";
-				return true;
+			// Require a Colour next
+			if (modifyColour(inputToAdd)) {
+				std::cout << "Action Cost: ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
+				std::cout << "ERROR: Invalid colour passed to Event.\n";
+				printAcceptableColours(true);
+				std::cout << "Colour: ";
 				return false;
 			}
 		case (4) :
-			// Faceoff Power
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-				modifyPower(StringUtility::stringToInt(inputToAdd));
-				incrementAddedFields();
-				cout << "Special Text: ";
-				return true;
+			// Action Cost
+			if (modifyActionCost(inputToAdd)) {
+				std::cout << "Colour Cost (0 if none): ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
+				std::cout << "ERROR: Invalid Action Cost entered for Event.\nAction Cost: ";
+				return false;
+			}
+		case (5) :
+			// Colour Cost
+			if (modifyDevelopmentCost(inputToAdd)) {
+				std::cout << "Faceoff Power: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid Colour Cost entered for Event.\nColour Cost (0 if none): ";
+				return false;
+			}
+		case (6) :
+			// Faceoff Power
+			if (modifyPower(inputToAdd)) {
+				std::cout << "Special Text: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
 				return false;
 			}
 		default:
@@ -88,15 +105,14 @@ bool Event::addFields(string inputToAdd) {
 			return true;
 	}
 
-	// The function should not fall through to here.
-	cout << "ERROR: There is a bug in addFields() in Event." << endl;
-	return false;
+	incrementAddedFields();
+	return true;
 }
 
 void Event::printStats() {
-	std::cout << boost::format("%1%\nAction Cost: %2%\nColour: %3%\nColour Cost: %4%\nSpecial Text:")
-		% accessName() % accessActionCost() % Card::colourToString(accessColour()) 
+	std::cout << boost::format("%1% (%2% Owned)\nAction Cost: %3%\nColour: %4%\nColour Cost: %5%")
+		% accessName() % accessFrequency() % accessActionCost() % Card::colourToString(accessColour()) 
 		% accessDevelopmentCost() << std::endl;
-
+	printTypeModifiers();
 	printSpecialText();
 }

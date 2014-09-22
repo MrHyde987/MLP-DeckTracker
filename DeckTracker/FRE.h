@@ -19,7 +19,9 @@ public:
 		int developmentCost,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 	// Abstract class
 	virtual ~FRE();
@@ -28,7 +30,7 @@ protected:
 	int accessActionCost();
 	int accessDevelopmentCost();
 
-	void modifyActionCost(int newAC);
-	void modifyDevelopmentCost(int newDC);
+	bool modifyActionCost(string newAC);
+	bool modifyDevelopmentCost(string newDC);
 };
 #endif // _FRE_

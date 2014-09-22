@@ -9,8 +9,10 @@ TroubleMaker::TroubleMaker(
 	bool isVillain,
 	Colour colour,
 	int power,
+	vector<string> typeModifiers,
 	string name,
-	vector<string> specialText) : PlayableCard(colour, power, name, specialText) {
+	Rarity rarity,
+	vector<string> specialText) : PlayableCard(colour, power, typeModifiers, name, rarity, specialText) {
 
 	this->pointValue = pointValue;
 	this->isVillain = isVillain;
@@ -19,8 +21,9 @@ TroubleMaker::TroubleMaker(
 TroubleMaker::~TroubleMaker() {}
 
 void TroubleMaker::printStats() {
-	std::cout << boost::format("%1%\nVillain: %2%\nPower: %3%\nPts: %4%\nSpecial Text:")
-		% accessName() % (isVillain ? "True " : "False") % accessPower() % pointValue << std::endl;
+	std::cout << boost::format("%1% (%2% Owned)\nRarity: %3%\nVillain: %4%\nPower: %5%\nPts: %6%")
+		% accessName() % accessFrequency() % Card::rarityToString(accessRarity()) % (isVillain ? "True " : "False") % accessPower() % pointValue << std::endl;
+	printTypeModifiers();
 	printSpecialText();
 }
 
@@ -30,44 +33,66 @@ bool TroubleMaker::addFields(string inputToAdd) {
 
 		case(0) :
 			// Require the name
-			modifyName(inputToAdd);
-			incrementAddedFields();
-			modifyColour(COLOUR_NONE); // All TMs have no colour
-			cout << "Point Value: ";
-			return true;
+			if (modifyName(inputToAdd)) {
+				modifyColour("None"); // All TMs have no colour
+				std::cout << "Rarity: ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid Name entered for Trouble Maker.\n";
+				std::cout << "Name: ";
+				return false;
+			}
 		case(1) :
+			// Rarity
+			if (modifyRarity(inputToAdd)) {
+				std::cout << "Type Modifiers (e.g. Royalty etc.): ";
+				break;
+			}
+			else {
+				std::cout << "ERROR: Invalid Rarity entered for Trouble Maker.\n";
+				Card::printAcceptableRarities();
+				std::cout << "Rarity: ";
+				return false;
+			}
+		case (2) :
+			// Type Modifiers
+			if (pushTypeModifier(inputToAdd))
+				return true;
+			else {
+				std::cout << "Point Value: ";
+				break;
+			}
+		case(3) :
 			// Point Value
 			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
 				pointValue = StringUtility::stringToInt(inputToAdd);
-				incrementAddedFields();
-				cout << "Villain? ";
-				return true;
+				std::cout << "Villain? ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid Point Value entered for Trouble Maker.\nPoint Value: ";
+				std::cout << "ERROR: Invalid Point Value entered for Trouble Maker.\nPoint Value: ";
 				return false;
 			}
-		case(2) :
+		case(4) :
+			// Is Villain?
 			if (StringUtility::checkIsBool(inputToAdd)) {
 				isVillain = StringUtility::stringToBool(inputToAdd);
-				incrementAddedFields();
-				cout << "Faceoff Power: ";
-				return true;
+				std::cout << "Faceoff Power: ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid isVillain value entered for Trouble Maker.\nVillain? ";
+				std::cout << "ERROR: Invalid isVillain value entered for Trouble Maker.\nVillain? ";
 				return false;
 			}
-		case(3) :
+		case(5) :
 			// Faceoff Power
-			if (StringUtility::checkIsPositiveInt(inputToAdd)) {
-			modifyPower(StringUtility::stringToInt(inputToAdd));
-			incrementAddedFields();
-			cout << "Special Text: ";
-			return true;
+			if (modifyPower(inputToAdd)) {
+				std::cout << "Special Text: ";
+				break;
 			}
 			else {
-				cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
+				std::cout << "ERROR: Invalid Faceoff Power entered for Event.\nFaceoff Power: ";
 				return false;
 			}
 		default :
@@ -76,9 +101,8 @@ bool TroubleMaker::addFields(string inputToAdd) {
 			return true;
 	}
 
-	// Execution should not fall through to here.
-	cout << "ERROR: There is a bug in TroubleMaker::addFields" << endl;
-	return false;
+	incrementAddedFields();
+	return true;
 }
 
 bool TroubleMaker::isCardComplete() {

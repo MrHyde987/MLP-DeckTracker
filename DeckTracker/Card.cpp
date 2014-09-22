@@ -5,6 +5,7 @@
 Card::Card() {
 
 	filledFields = 0;
+	frequency = 1;
 	specialText = vector<string>();
 }
 
@@ -20,24 +21,17 @@ Card::Card(string name) : name(name) {
 // NOTE: Even though the dynamic "card-building" methods will not
 // make use of these constructors, they will be important for reading
 // cards from deck and manifest files later on.
-Card::Card(string name, vector<string> specialText) {
+Card::Card(string name, Rarity rarity, vector<string> specialText) {
 
 	// How to deal with frequency when reading in files is a design
 	// decision that has yet to be made.
 	//frequency = 1;
 	this->name = name;
+	this->rarity = rarity;
 	this->specialText = specialText;
 }
 
 Card::~Card() {}
-
-void Card::incrementFrequency() {
-	frequency++;
-}
-
-void Card::decrementFrequency() {
-	frequency--;
-}
 
 //////////////////////////////////////////////
 //		Operator Overloads
@@ -55,12 +49,33 @@ string Card::accessName() {
 	return name;
 }
 
+Rarity Card::accessRarity() {
+	return rarity;
+}
+
 vector<string> Card::accessSpecialText() {
 	return specialText;
 }
 
-void Card::modifyName(string newName) {
+bool Card::modifyName(string newName) {
 	name = newName;
+
+	if (newName.compare("") != 0) {
+		name = newName;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool Card::modifyRarity(string newRarity) {
+	Rarity prospectiveRarity = stringToRarity(newRarity);
+	if (prospectiveRarity != RARITY_INVALID) {
+		rarity = prospectiveRarity;
+		return true;
+	}
+	else
+		return false;
 }
 
 void Card::modifySpecialText(vector<string> newText) {
@@ -68,8 +83,15 @@ void Card::modifySpecialText(vector<string> newText) {
 }
 
 void Card::printSpecialText() {
-	for (unsigned int i = 0; i < specialText.size(); ++i) {
-		std::cout << specialText[i] << endl;
+
+	std::cout << "Special Text: ";
+
+	if (specialText.size() == 0)
+		std::cout << "N/A" << endl;
+	else {
+		for (unsigned int i = 0; i < specialText.size(); ++i) {
+			std::cout << specialText[i] << endl;
+		}
 	}
 }
 
@@ -84,6 +106,22 @@ void Card::incrementAddedFields() {
 const int Card::accessFieldsAdded() const {
 	return filledFields;
 }
+
+const int Card::accessFrequency() const {
+	return frequency;
+}
+
+void Card::incrementFrequency() {
+	frequency++;
+}
+
+void Card::decrementFrequency() {
+	frequency--;
+}
+
+//////////////////////////////////////////////
+//		Static Enum Converters
+//////////////////////////////////////////////
 
 Colour Card::stringToColour(string toConvert) {
 
@@ -140,4 +178,74 @@ string Card::colourToString(Colour toConvert) {
 	}
 
 	return toRet;
+}
+
+void Card::printAcceptableColours(bool allowNone) {
+	std::cout << "Acceptable Colours: " << endl;
+	std::cout << "Purple\nWhite\nYellow\nPink\nOrange\nBlue\n";
+	
+	// Some kinds are cards are allowed to not have a colour.
+	if (allowNone) std::cout << "None\n";
+}
+
+Rarity Card::stringToRarity(string toConvert) {
+
+	Rarity rarity;
+	StringUtility::toLowerCase(toConvert);
+
+	if (toConvert.compare("common") == 0)
+		rarity = RARITY_COMMON;
+	else if (toConvert.compare("uncommon") == 0)
+		rarity = RARITY_UNCOMMON;
+	else if (toConvert.compare("rare") == 0)
+		rarity = RARITY_RARE;
+	else if (toConvert.compare("ultra rare") == 0)
+		rarity = RARITY_ULTRA_RARE;
+	else if (toConvert.compare("fixed") == 0)
+		rarity = RARITY_FIXED;
+	else if (toConvert.compare("foil") == 0)
+		rarity = RARITY_FOIL;
+	else if (toConvert.compare("promo") == 0)
+		rarity = RARITY_PROMO;
+	else
+		rarity = RARITY_INVALID;
+
+	return rarity;
+}
+
+string Card::rarityToString(Rarity toConvert) {
+
+	string toRet;
+	switch (toConvert) {
+		case (RARITY_COMMON) :
+			toRet = "Common";
+			break;
+		case (RARITY_UNCOMMON) :
+			toRet = "Uncommon";
+			break;
+		case (RARITY_RARE) :
+			toRet = "Rare";
+			break;
+		case (RARITY_ULTRA_RARE) :
+			toRet = "Ultra Rare";
+			break;
+		case (RARITY_FIXED) :
+			toRet = "Fixed";
+			break;
+		case (RARITY_FOIL) :
+			toRet = "Foil";
+			break;
+		case (RARITY_PROMO) :
+			toRet = "Promotional";
+			break;
+		default:
+			toRet = "ERROR: Attempted to convert invalid Rarity";
+	}
+
+	return toRet;
+}
+
+void Card::printAcceptableRarities() {
+	std::cout << "Acceptable Rarities: " << endl;
+	std::cout << "Common\nUncommon\nRare\nUltra Rare\nFixed\nFoil\nPromo\n";
 }

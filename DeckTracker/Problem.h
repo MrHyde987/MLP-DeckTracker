@@ -16,7 +16,7 @@ private:
 	int secondaryColourConfrontCost;
 	bool isStarting;
 
-	const static int NUM_FIELDS = 8;
+	const static int NUM_FIELDS = 9;
 
 public:
 	Problem();
@@ -30,6 +30,7 @@ public:
 		int secondaryColourConfrontCost,
 		bool isStarting,
 		string name,
+		Rarity rarity,
 		vector<string> specialText);
 
 	~Problem();

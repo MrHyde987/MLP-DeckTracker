@@ -8,7 +8,7 @@ private:
 	int pointValue;
 	bool isVillain;
 
-	const static int NUM_FIELDS = 4;
+	const static int NUM_FIELDS = 6;
 
 public:
 	TroubleMaker();
@@ -18,7 +18,9 @@ public:
 		bool isVillain,
 		Colour colour,
 		int power,
+		vector<string> typeModifiers,
 		string name,
+		Rarity rarity,
 		vector<string> text);
 
 	~TroubleMaker();
