@@ -1,0 +1,189 @@
+///////////////////////////////////////////////////////////////////////////////////////////
+/// This is a "disassembly" of sorts for the manifest file that is currently being tested with.
+/// There are six cards in this manifest, and each one has its text expanded below.
+/// Over the course of making this file, a couple of possible improvements to the file
+/// structure became clear to me. For example:
+///	- Card records don't really need type signatures, since all cards of the same
+///	  type will be together, and the header tells us how many of each type to expect.
+///	- For the same reason, cards don't need end of record signatures. Instead it's
+///	  probably better to have signature values between card groups.
+///	- In the string table dictionary, all of the offsets can be calculated by adding
+///	  the length of the preceding strings to the first offset. Thus, most of the
+///	  offset fields are unnecessary. The string length field also could only be
+///	  16 bits and we would still be fine.
+///	- The string table index field in the Record structure is also likely not needed,
+///	  since the indices will be sequential (i.e. the first record will use the first two
+///	  indices, etc.) This might have to wait until we start to read in the files though.
+///
+///	Created by Carl Hyde, 2014
+////////////////////////////////////////////////////////////////////////////////////////////
+
+======================The Cards: (Card text expanded to hex)============================
+
+Princess Luna - Dream Catcher
+	Name:
+50 72 69 6e 63 65 73 73 20 4c 75 6e 61 20 2d 20 44 72 65 61 6d 20 43 61 74 63 68 65 72 00 // 30 chars
+	Start Special Text:
+00 // 1 char
+	Boosted Special Text:
+57 68 65 6e 20 74 68 69 73 20 73 69 64 65 20 6f 66 20 74 68 65 20 63 61 72 64 20 69 73 20 74 75 72 6e 65 64 20 66 61 63 65 20 75 70 2c 20 79 6f 75 20 6d 61 79 20 73 65 61 72 63 68 20 79 6f 75 72 20 64 65 63 6b 20 66 6f 72 20 61 6e 20 45 76 65 6e 74 2c 20 72 65 76 65 61 6c 20 69 74 2c 20 70 75 74 20 69 74 20 69 6e 74 6f 20 79 6f 75 72 20 68 61 6e 64 2c 20 61 6e 64 20 73 68 75 66 66 6c 65 20 79 6f 75 72 20 64 65 63 6b 2e 00 // 142 chars
+	Start Flip Condition:
+4d 61 69 6e 20 50 68 61 73 65 3a 20 50 61 79 20 33 20 41 63 74 69 6f 6e 73 20 74 6f 20 74 75 72 6e 20 74 68 69 73 20 63 61 72 64 20 6f 76 65 72 2e 00 // 50 chars
+	Boosted Flip Condition:
+41 74 20 74 68 65 20 73 74 61 72 74 20 6f 66 20 79 6f 75 72 20 6d 61 69 6e 20 70 68 61 73 65 2c 20 79 6f 75 20 6d 61 79 20 72 65 76 65 61 6c 20 74 68 65 20 74 6f 70 20 63 61 72 64 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 2e 20 49 66 20 79 6f 75 20 64 6f 2c 20 72 65 76 65 61 6c 20 61 20 63 61 72 64 20 66 72 6f 6d 20 79 6f 75 72 20 68 61 6e 64 2e 20 49 66 20 74 68 65 20 70 72 69 6e 74 65 64 20 70 6f 77 65 72 20 6f 66 20 74 68 65 20 63 61 72 64 20 66 72 6f 6d 20 79 6f 75 72 20 68 61 6e 64 20 69 73 20 67 72 65 61 74 65 72 2c 20 70 75 74 20 74 68 65 20 63 61 72 64 20 72 65 76 65 61 6c 65 64 20 66 72 6f 6d 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 74 6f 20 79 6f 75 72 20 68 61 6e 64 20 61 6e 64 20 74 75 72 6e 20 74 68 69 73 20 63 61 72 64 20 6f 76 65 72 2e 00 // 253 chars
+
+Fluttershy - Rainbow Chaser
+	Name:
+46 6c 75 74 74 65 72 73 68 79 20 2d 20 52 61 69 6e 62 6f 77 20 43 68 61 73 65 72 00 // 28 chars
+	Card Text:
+57 68 69 6c 65 20 61 74 20 61 20 50 72 6f 62 6c 65 6d 20 77 69 74 68 20 61 20 59 65 6c 6c 6f 77 20 46 72 69 65 6e 64 2c 20 74 68 69 73 20 63 61 72 64 20 68 61 73 20 2b 31 20 50 6f 77 65 72 2e 00 57 68 69 6c 65 20 61 74 20 61 20 50 72 6f 62 6c 65 6d 20 77 69 74 68 20 50 69 6e 6b 69 65 20 50 69 65 2c 20 74 68 69 73 20 63 61 72 64 20 68 61 73 20 2b 31 20 50 6f 77 65 72 20 61 6e 64 20 69 73 20 61 6c 73 6f 20 50 69 6e 6b 2e 00 // 142 chars
+
+Savoir Fare - Snooty Server
+	Name:
+53 61 76 6f 69 72 20 46 61 72 65 20 2d 20 53 6e 6f 6f 74 79 20 53 65 72 76 65 72 00 // 28 chars
+	Card Text:
+49 6e 73 70 69 72 65 64 00 57 68 65 6e 20 79 6f 75 20 70 6c 61 79 20 74 68 69 73 20 63 61 72 64 20 74 6f 20 61 20 50 72 6f 62 6c 65 6d 2c 20 63 68 6f 6f 73 65 20 61 6e 6f 74 68 65 72 20 6f 6e 65 20 6f 66 20 79 6f 75 72 20 63 68 61 72 61 63 74 65 72 73 20 74 68 61 74 20 74 68 61 74 20 50 72 6f 62 6c 65 6d 2e 20 49 74 20 67 65 74 73 20 2b 32 20 70 6f 77 65 72 20 75 6e 74 69 6c 20 74 68 65 20 65 6e 64 20 6f 66 20 74 68 65 20 74 75 72 6e 2e 00 // 148 char
+
+The Element of Magic - Complete Magic
+	Name:
+54 68 65 20 45 6c 65 6d 65 6e 74 20 6f 66 20 4d 61 67 69 63 20 2d 20 43 6f 6d 70 6c 65 74 65 20 4d 61 67 69 63 00
+// 38 chars
+	Card Text:
+59 6f 75 20 6d 75 73 74 20 63 6f 6e 74 72 6f 6c 20 54 77 69 6c 69 67 68 74 20 53 70 61 72 6b 6c 65 20 74 6f 20 70 6c 61 79 20 74 68 69 73 20 63 61 72 64 2e 00 41 74 20 74 68 65 20 73 74 61 72 74 20 6f 66 20 79 6f 75 72 20 74 75 72 6e 2c 20 70 75 74 20 61 20 48 61 72 6d 6f 6e 79 20 74 6f 6b 65 6e 20 6f 6e 20 74 68 69 73 20 63 61 72 64 2e 00 4d 61 69 6e 20 50 68 61 73 65 3a 20 52 65 6d 6f 76 65 20 32 20 48 61 72 6d 6f 6e 79 20 74 6f 6b 65 6e 73 20 66 72 6f 6d 20 74 68 69 73 20 63 61 72 64 20 74 6f 20 6c 6f 6f 6b 20 61 74 20 74 68 65 20 74 6f 70 20 33 20 63 61 72 64 73 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 2e 20 59 6f 75 20 6d 61 79 20 70 75 74 20 61 6e 79 20 6e 75 6d 62 65 72 20 6f 66 20 74 68 65 6d 20 6f 6e 20 74 6f 70 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 20 61 6e 79 20 6f 72 64 65 72 20 61 6e 64 20 74 68 65 20 72 65 73 74 20 6f 6e 20 74 68 65 20 62 6f 74 74 6f 6d 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 20 61 6e 79 20 6f 72 64 65 72 2e 00 // 324 chars
+
+Eeyup
+	Name:
+45 65 79 75 70 00 // 6 chars
+	Card Text:
+4d 61 69 6e 20 50 68 61 73 65 3a 20 43 68 6f 6f 73 65 20 61 20 63 68 61 72 61 63 74 65 72 2e 20 54 68 61 74 20 63 68 61 72 61 63 74 65 72 20 67 65 74 73 20 2b 34 20 50 6f 77 65 72 20 61 6e 64 20 69 73 20 4f 72 61 6e 67 65 20 75 6e 74 69 6c 20 74 68 65 20 65 6e 64 20 6f 66 20 74 68 65 20 74 75 72 6e 2e 00 // 102 chars
+
+Sunset Shimmer
+	Name:
+53 75 6e 73 65 74 20 53 68 69 6d 6d 65 72 00 // 15 chars
+	Text:
+57 68 65 6e 20 74 68 69 73 20 63 61 72 64 20 69 73 20 75 6e 63 6f 76 65 72 65 64 2c 20 79 6f 75 20 6d 61 79 20 70 61 79 20 33 20 41 63 74 69 6f 6e 73 2e 20 49 66 20 79 6f 75 20 64 6f 2c 20 74 68 65 6e 20 62 61 6e 69 73 68 20 61 6e 20 6f 70 70 6f 6e 65 6e 74 27 73 20 6f 72 20 52 65 73 6f 75 72 63 65 20 74 6f 20 62 65 6e 65 61 74 68 20 74 68 69 73 20 63 61 72 64 2e 00 57 68 65 6e 20 74 68 69 73 20 63 61 72 64 20 6c 65 61 76 65 73 20 70 6c 61 79 20 6f 72 20 69 73 20 74 75 72 6e 65 64 20 66 61 63 65 2d 64 6f 77 6e 2c 20 70 75 74 20 61 6e 79 20 63 61 72 64 73 20 62 65 6e 65 61 74 68 20 69 74 20 69 6e 74 6f 20 74 68 65 69 72 20 6f 77 6e 65 72 27 73 20 68 61 6e 64 2e 00 // 224 char
+
+==================The Structure of the Manifest File=======================
+
+Header Block:
+0x4349734250 "CIsBP"
+0x00000006 (NumUniqueCards)
+0x00000000 (Reserved)
+0x00000001 (NumUniqueTMs)
+0x00000001 (NumUniqueMCs)
+0x00000002 (NumUniqueFriends)
+0x00000001 (NumUniqueRsrces)
+0x00000001 (NumUniqueEvents)
+0x00000000 (NumUniqueProblems)
+0x000000D4 (String Table Offset)
+
+Sunset Shimmer:
+0x01 (TM signature)
+0x00000000 (String Table Index 0) (Card Name)
+0x72 (Rare signature)
+0xff (Foil signature)
+0x0002 (Frequency: I've got 2 of them)
+0x00000001 (String Table Index 1) (Special Text)
+0x05 (Power)
+0x00 (Is not a villain)
+0x02 (Point Value)
+0x43454C4553544941 (End of Record Mark)
+
+Princess Luna - Dream Catcher:
+0x02 (MC signature)
+0x00000002 (String Table Index 2) (Card Name)
+0x73 (Ultra Rare Signature)
+0xff (Foil Signature - UR's are considered Foils)
+0x0001 (Frequency)
+0x00000003 (String Table Index 3) (Special Text)
+0x0A (Colour Purple)
+0x01 (Starting Power)
+0x04 (Royalty)
+0x00000004 (STI 4) (Start Flip Condition)
+0x00000005 (STI 5) (Boosted Flip Condition)
+0xA3 (Alicorn Signature)
+0x02 (Boosted Power)
+0x04 (Start Home Limit)
+0x04 (Boosted Home Limit)
+0x00000006 (STI 6) (Start Text)
+0x43454C4553544941 (End of Record Mark)
+
+Fluttershy - Rainbow Chaser
+0x03 (Friend Signature)
+0x00000007 (STI 7) (Card Name)
+0x75 (Promotional Signature)
+0xff (All Promo's are foils, but they are explicitly noted as such)
+0x01 (Frequency)
+0x00000008 (Special Text)
+0x0B (Blue Signature)
+0x02 (Power)
+0x00 (No Special Modifiers)
+0x03 (Action Cost)
+0x01 (Colour Cost)
+0xA1 (Pegasus Signature)
+0x43454C4553544941 (End of Record Mark)
+
+Savoir Fare - Snooty Server
+0x03 (Friend Signature)
+0x00000009 (STI 9) (Card Name)
+0x72 (Rare Signature)
+0x00 (Non-foil)
+0x0001 (Frequency)
+0x0000000A (STI 10) (Card Text)
+0x0E (White Signature)
+0x02 (Power)
+0x00 (No Modifiers)
+0x02 (Action Cost)
+0x02 (Colour Cost)
+0xA2 (Earth Pony Signature)
+0x43454C4553544941 (End of Record Mark)
+
+The Element of Magic - Complete Magic
+0x04 (Resource Signature)
+0x0000000B (STI 11) (Card Name)
+0x73 (UR)
+0xff (Definitely a foil)
+0x0001 (1 owned)
+0x0000000C (STI 12) (Card Text)
+0x0A (Purple)
+0x07 (Power)
+0xA0 (Artifact (0x20) | Unique (0x80))
+0x02 (Action Cost)
+0x03 (Colour Cost)
+0x50 (Played at Home)
+0x43454C4553544941 (End of Record Mark)
+
+Eeyup:
+0x05 (Event Signature)
+0x0000000D (STI 13) (Card Name)
+0x72 (Rare)
+0x00 (Non-Foil)
+0x0003 (3 Owned)
+0x0000000E (STI 14) (Card Text)
+0x0F (Orange)
+0x04 (Power)
+0x00 (No Modifiers)
+0x02 (Action Cost)
+0x04 (Colour Cost)
+0x43454C4553544941 (End of Record Mark)
+
+String Table Dictionary:
+(Note that the first string is offset by the size of the dictionary (15 strings * 8 bytes per STE)
+0x000000A8 0x0000000F (Sunset Shimmer - TM's First!)
+0x000000B7 0x000000E0
+0x00000197 0x0000001E (UR Luna) (Name)
+0x000001B5 0x0000008E (Boosted Text)
+0x00000243 0x00000032 (Start Flip)
+0x00000275 0x000000FD (Boosted Flip)
+0x00000372 0x00000001 (Start Text)
+0x00000373 0x0000001C (Rainbow Chaser Name)
+0x0000038F 0x0000008E
+0x0000041D 0x0000001C (Savoir Name)
+0x00000439 0x00000094
+0x000004CD 0x00000026 (Element of Magic Name)
+0x000004F3 0x00000144 
+0x00000637 0x00000006 (Eeyup Name)
+0x0000063D 0x00000066 
+
+Strings (Raw):
+53 75 6e 73 65 74 20 53 68 69 6d 6d 65 72 00 57 68 65 6e 20 74 68 69 73 20 63 61 72 64 20 69 73 20 75 6e 63 6f 76 65 72 65 64 2c 20 79 6f 75 20 6d 61 79 20 70 61 79 20 33 20 41 63 74 69 6f 6e 73 2e 20 49 66 20 79 6f 75 20 64 6f 2c 20 74 68 65 6e 20 62 61 6e 69 73 68 20 61 6e 20 6f 70 70 6f 6e 65 6e 74 27 73 20 6f 72 20 52 65 73 6f 75 72 63 65 20 74 6f 20 62 65 6e 65 61 74 68 20 74 68 69 73 20 63 61 72 64 2e 00 57 68 65 6e 20 74 68 69 73 20 63 61 72 64 20 6c 65 61 76 65 73 20 70 6c 61 79 20 6f 72 20 69 73 20 74 75 72 6e 65 64 20 66 61 63 65 2d 64 6f 77 6e 2c 20 70 75 74 20 61 6e 79 20 63 61 72 64 73 20 62 65 6e 65 61 74 68 20 69 74 20 69 6e 74 6f 20 74 68 65 69 72 20 6f 77 6e 65 72 27 73 20 68 61 6e 64 2e 00 50 72 69 6e 63 65 73 73 20 4c 75 6e 61 20 2d 20 44 72 65 61 6d 20 43 61 74 63 68 65 72 00 57 68 65 6e 20 74 68 69 73 20 73 69 64 65 20 6f 66 20 74 68 65 20 63 61 72 64 20 69 73 20 74 75 72 6e 65 64 20 66 61 63 65 20 75 70 2c 20 79 6f 75 20 6d 61 79 20 73 65 61 72 63 68 20 79 6f 75 72 20 64 65 63 6b 20 66 6f 72 20 61 6e 20 45 76 65 6e 74 2c 20 72 65 76 65 61 6c 20 69 74 2c 20 70 75 74 20 69 74 20 69 6e 74 6f 20 79 6f 75 72 20 68 61 6e 64 2c 20 61 6e 64 20 73 68 75 66 66 6c 65 20 79 6f 75 72 20 64 65 63 6b 2e 00 4d 61 69 6e 20 50 68 61 73 65 3a 20 50 61 79 20 33 20 41 63 74 69 6f 6e 73 20 74 6f 20 74 75 72 6e 20 74 68 69 73 20 63 61 72 64 20 6f 76 65 72 2e 00 41 74 20 74 68 65 20 73 74 61 72 74 20 6f 66 20 79 6f 75 72 20 6d 61 69 6e 20 70 68 61 73 65 2c 20 79 6f 75 20 6d 61 79 20 72 65 76 65 61 6c 20 74 68 65 20 74 6f 70 20 63 61 72 64 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 2e 20 49 66 20 79 6f 75 20 64 6f 2c 20 72 65 76 65 61 6c 20 61 20 63 61 72 64 20 66 72 6f 6d 20 79 6f 75 72 20 68 61 6e 64 2e 20 49 66 20 74 68 65 20 70 72 69 6e 74 65 64 20 70 6f 77 65 72 20 6f 66 20 74 68 65 20 63 61 72 64 20 66 72 6f 6d 20 79 6f 75 72 20 68 61 6e 64 20 69 73 20 67 72 65 61 74 65 72 2c 20 70 75 74 20 74 68 65 20 63 61 72 64 20 72 65 76 65 61 6c 65 64 20 66 72 6f 6d 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 74 6f 20 79 6f 75 72 20 68 61 6e 64 20 61 6e 64 20 74 75 72 6e 20 74 68 69 73 20 63 61 72 64 20 6f 76 65 72 2e 00 00 46 6c 75 74 74 65 72 73 68 79 20 2d 20 52 61 69 6e 62 6f 77 20 43 68 61 73 65 72 00 57 68 69 6c 65 20 61 74 20 61 20 50 72 6f 62 6c 65 6d 20 77 69 74 68 20 61 20 59 65 6c 6c 6f 77 20 46 72 69 65 6e 64 2c 20 74 68 69 73 20 63 61 72 64 20 68 61 73 20 2b 31 20 50 6f 77 65 72 2e 00 57 68 69 6c 65 20 61 74 20 61 20 50 72 6f 62 6c 65 6d 20 77 69 74 68 20 50 69 6e 6b 69 65 20 50 69 65 2c 20 74 68 69 73 20 63 61 72 64 20 68 61 73 20 2b 31 20 50 6f 77 65 72 20 61 6e 64 20 69 73 20 61 6c 73 6f 20 50 69 6e 6b 2e 00 53 61 76 6f 69 72 20 46 61 72 65 20 2d 20 53 6e 6f 6f 74 79 20 53 65 72 76 65 72 00 49 6e 73 70 69 72 65 64 00 57 68 65 6e 20 79 6f 75 20 70 6c 61 79 20 74 68 69 73 20 63 61 72 64 20 74 6f 20 61 20 50 72 6f 62 6c 65 6d 2c 20 63 68 6f 6f 73 65 20 61 6e 6f 74 68 65 72 20 6f 6e 65 20 6f 66 20 79 6f 75 72 20 63 68 61 72 61 63 74 65 72 73 20 74 68 61 74 20 74 68 61 74 20 50 72 6f 62 6c 65 6d 2e 20 49 74 20 67 65 74 73 20 2b 32 20 70 6f 77 65 72 20 75 6e 74 69 6c 20 74 68 65 20 65 6e 64 20 6f 66 20 74 68 65 20 74 75 72 6e 2e 00 54 68 65 20 45 6c 65 6d 65 6e 74 20 6f 66 20 4d 61 67 69 63 20 2d 20 43 6f 6d 70 6c 65 74 65 20 4d 61 67 69 63 00 59 6f 75 20 6d 75 73 74 20 63 6f 6e 74 72 6f 6c 20 54 77 69 6c 69 67 68 74 20 53 70 61 72 6b 6c 65 20 74 6f 20 70 6c 61 79 20 74 68 69 73 20 63 61 72 64 2e 00 41 74 20 74 68 65 20 73 74 61 72 74 20 6f 66 20 79 6f 75 72 20 74 75 72 6e 2c 20 70 75 74 20 61 20 48 61 72 6d 6f 6e 79 20 74 6f 6b 65 6e 20 6f 6e 20 74 68 69 73 20 63 61 72 64 2e 00 4d 61 69 6e 20 50 68 61 73 65 3a 20 52 65 6d 6f 76 65 20 32 20 48 61 72 6d 6f 6e 79 20 74 6f 6b 65 6e 73 20 66 72 6f 6d 20 74 68 69 73 20 63 61 72 64 20 74 6f 20 6c 6f 6f 6b 20 61 74 20 74 68 65 20 74 6f 70 20 33 20 63 61 72 64 73 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 2e 20 59 6f 75 20 6d 61 79 20 70 75 74 20 61 6e 79 20 6e 75 6d 62 65 72 20 6f 66 20 74 68 65 6d 20 6f 6e 20 74 6f 70 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 20 61 6e 79 20 6f 72 64 65 72 20 61 6e 64 20 74 68 65 20 72 65 73 74 20 6f 6e 20 74 68 65 20 62 6f 74 74 6f 6d 20 6f 66 20 79 6f 75 72 20 64 65 63 6b 20 69 6e 20 61 6e 79 20 6f 72 64 65 72 2e 00 45 65 79 75 70 00 4d 61 69 6e 20 50 68 61 73 65 3a 20 43 68 6f 6f 73 65 20 61 20 63 68 61 72 61 63 74 65 72 2e 20 54 68 61 74 20 63 68 61 72 61 63 74 65 72 20 67 65 74 73 20 2b 34 20 50 6f 77 65 72 20 61 6e 64 20 69 73 20 4f 72 61 6e 67 65 20 75 6e 74 69 6c 20 74 68 65 20 65 6e 64 20 6f 66 20 74 68 65 20 74 75 72 6e 2e 00

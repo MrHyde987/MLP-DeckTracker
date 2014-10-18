@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Card" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABABCAgBAAABCAEAUCAAYAgSIBHAICCAEQQAAAAUAA=</HashCode>
+      <FileName>Card.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayableCard" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAQCAABBAQAAABAAAAAAAAAAEgACAABAAAAACAhAA=</HashCode>
+      <FileName>PlayableCard.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Problem" Collapsed="true">
+    <Position X="13" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAIAAAACBAAEAACAgBAAAAACAAAAAAAYAAAgBAA=</HashCode>
+      <FileName>Problem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TroubleMaker" Collapsed="true">
+    <Position X="2.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABCAABAAEAAAACBAAACIAAiAAAAAQAAAAAAA=</HashCode>
+      <FileName>TroubleMaker.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ManeCharacter" Collapsed="true">
+    <Position X="4.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAACABAAABICUAAAAgBAEEAAEACAAAAAQwAAABAA=</HashCode>
+      <FileName>ManeCharacter.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FRE" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiAAABAgAAAAAAAAAAAAAAABAAAAFAAAAAIAAAAAAAA=</HashCode>
+      <FileName>FRE.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Friend" Collapsed="true">
+    <Position X="8" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAABAAABAAEAAAAABAAAAAAACAACAAQAAAABAA=</HashCode>
+      <FileName>Friend.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Resource" Collapsed="true">
+    <Position X="9.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAJAAABIAEAAAAABECAAACACAAAAAQAAAAAAA=</HashCode>
+      <FileName>Resource.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Event" Collapsed="true">
+    <Position X="14.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAABAAEEAAAABAAAgAAACAAAAAQAAAAAAA=</HashCode>
+      <FileName>Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CardSet" Collapsed="true">
+    <Position X="19.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQSAgAAYQIRIBgUAgACAQAAIAAQgADQABAQAAgoAAAU=</HashCode>
+      <FileName>CardSet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StringTable" Collapsed="true">
+    <Position X="17.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAQAAAAAAAAAAAAABAAIAAAAAAkAAAAACAgA=</HashCode>
+      <FileName>ManifestInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ManifestInterface" Collapsed="true">
+    <Position X="15.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CIAAAAAAAgIAAAAAEAAEAAAACAAAAAAAJBBAAAAAAAA=</HashCode>
+      <FileName>ManifestInterface.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StringUtility" Collapsed="true">
+    <Position X="21" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wAAAgQBAAAAAAAAABAAAAAAAAJQAAAAAAAAYAAAAAAA=</HashCode>
+      <FileName>StringUtility.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

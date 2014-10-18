@@ -41,6 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>C:\Work\Misc\Personal</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -81,11 +82,13 @@
   <ItemGroup>
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardSet.h" />
+    <ClInclude Include="DeckTracker.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="FRE.h" />
     <ClInclude Include="Friend.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="ManeCharacter.h" />
+    <ClInclude Include="ManifestInterface.h" />
     <ClInclude Include="PlayableCard.h" />
     <ClInclude Include="Problem.h" />
     <ClInclude Include="Resource.h" />
@@ -100,6 +103,7 @@
     <ClCompile Include="Friend.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ManeCharacter.cpp" />
+    <ClCompile Include="ManifestInterface.cpp" />
     <ClCompile Include="PlayableCard.cpp" />
     <ClCompile Include="Problem.cpp" />
     <ClCompile Include="Resource.cpp" />

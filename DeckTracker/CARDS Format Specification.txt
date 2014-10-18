@@ -1,0 +1,356 @@
+///////////////////////////////////////////////////////////////
+/// CARDS Format Specification.txt
+/// Version 1.0
+/// Designed and Written by Carl Hyde 
+/// Last Modified on Oct. 8, 2014
+///////////////////////////////////////////////////////////////
+
+
+The CARDS format is designed to hold the entirety of the user's card collection, and serves to store this data
+between sessions. The manifest will be loaded into memory at the commencement of the program, and stored back upon
+the program's closure. (At the moment, we assume that no user will have enough unique cards for this to cause
+memory usage issues. As the number of unique cards in play grows, this policy may need to be re-visited).
+
+For the most part, the format is relatively basic. The overrarching structure of the manifest goes as follows:
+
+[  Header Block  | Card Records                            | String Table Dictionary | String Table       ]
+
+The Header Block contains some useful information concerning the structure of the rest of the file, with the most 
+important fields being the ones describing the number of each unique type of card that will be found later on. 
+The Header Block also contains the offset (in bytes) from the beginning of the file to the beginning of the String 
+Table Dictionary.
+
+The Card Records section contains all of the data concerning the Cards that are stored. In order to ensure that all
+Card Records have a well-defined size, all variable length strings related to the cards (special modifiers and abilities,
+mostly) are stored separately in the string table at the end of the file. Instead, every card stores an index into the 
+String Table Dictionary, which is used to locate the string associated with that card. (Note that most cards store only
+one index into the dictionary; only Mane Characters can have more than one associated string. This may change in the 
+future, if card analytics demands it.) The different types of cards are packed together, to improve reading and writing speeds.
+The order will always be: Troublemakers, Mane Characters, Friends, Resources, Events, Problems.
+
+Card Records themselves vary depending on the type of card being represented. All cards will begin with an identical 
+Common Block, which contains those fields that all cards share (Name, Rarity, Frequency, IsFoil, Type, and SpecialText).
+Following this common block will be several optional fields, with the number and value of these fields being determined
+by the signature value found in the Type field of the Common Block.
+
+The String Table Dictionary is the second book-keeping structure in the file, and is useful for managing the string table
+at the ultimate rear of the file. Every string table offset stored by a card is an index into the String Table Dictionary, 
+and corresponds to a String Table Entry (STE) that has the following form:
+
+[  String Location    |    String Length  ]
+
+String Location is a 32-bit unsigned integer, corresponding to the byte-offset of this STE's string, measured from the 
+beginning of the String Table Dictionary. (It is believed that 32-bits should be plenty for this offset.) The String Length
+field corresponds to the length of the stored string. Note that the stored string may contain null characters; indeed this is
+how we store fields that are in fact vectors of strings (most notably the modifying text on various cards).
+
+Finally, of course, we have the string table itself, which is merely a running string from the end of the String Table Dictionary.
+The strings are fully described by their corresponding STEs, and so no guarantees are given concerning trailing null-characters, etc.
+Some strings will contain null-characters, especially strings that correspond to entries on a card that could have multiple points
+to them. For example, the text:
+
+"Supportive 2"
+
+"When this card enters play at a Problem, you may move an opponent's Friend to that Problem"
+
+would be stored as:
+
+"Supportive 2\0When this card enters play at a Problem, you may move an opponent's Friend to that Problem\0"
+
+and its corresponding STE would list its length as 104.
+
+Full layout (unless specified otherwise, all numerice fields are unsigned):
+
+Field            |      Size (bytes)     |       Offset      |      Values / Note
+=================+=======================+===================+===================================================================
+Header block     |         41            |         0         |
+=================+=======================+===================+===================================================================
+Signature        |          5            |         0         | 0x4349734250 - Signature to mark the start of the file
+                 |                       |                   |                Also answers an age-long question.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueCards   |          4            |         5         | 32-bit integer - The number of unique card records in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+                 |          4            |         9         | Reserved - Just in case
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueTMs     |          4            |        13         | 32-bit integer - Number of unique Troublemakers in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueMCs     |          4            |        17         | 32-bit int - The number of unique Mane Characters in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueFriends |          4            |        21         | 32-bit int - The number of unique Friends in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueRsrces  |          4            |        25         | 32-bit int - The number of unique Resources in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueEvents  |          4            |        29         | 32-bit int - The number of unique Events in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+NumUniqueProblems|          4            |        33         | 32-bit int - The number of unique Problems in the manifest
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+StringTableOffset|          4            |        37         | 32-bit int - Byte-offset of the String Table Dictionary
+=================+=======================+===================+===================================================================
+
+Common Block     |         13            |      Variable     |
+=================+=======================+===================+===================================================================
+CardType         |          1            |    CardType+0     | 8-bit int - This a single sig_t that defines the type of the 
+                 |                       |                   |              record following.
+                 |                       |                   |      0x01 - Troublemaker
+                 |                       |                   |      0x02 - Mane Character
+                 |                       |                   |      0x03 - Friend
+                 |                       |                   |      0x04 - Resource
+                 |                       |                   |      0x05 - Event
+                 |                       |                   |      0x06 - Problem
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+CardName         |          4            |    CardType+1     | 32-bit int - Index into the String Table Dictionary
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+CardRarity       |          1            |    CardType+5     | 8-bit int - A sig_t that defines the rarity of the Card.
+                 |                       |                   |      0x70 - Common
+                 |                       |                   |      0x71 - Uncommon
+                 |                       |                   |      0x72 - Rare
+                 |                       |                   |      0x73 - Ultra-Rare
+                 |                       |                   |      0x74 - Fixed
+                 |                       |                   |      0x75 - Promotional
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+IsFoil           |          1            |    CardType+6     | 8-bit int - A sig_t that defines if the card is a foil version.
+                 |                       |                   |      0x00 - Normal
+                 |                       |                   |      0xFF - Foil
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+CardFrequency    |          2            |    CardType+7     | 16-bit int - Up to 131071 copies of the same card supported. 
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+SpecialText      |          4            |    CardType+9     | 32-bit int - Index in the String Table Dictionary of the card's
+                 |                       |                   |               special modifying text. (For Mane Characters, this
+                 |                       |                   |               field contains text on the "Boosted" side of the
+                 |                       |                   |               card that does NOT act to flip the card over.)
+=================+=======================+===================+===================================================================
+
+For Troublemakers|         11            |      Variable     | 
+=================+=======================+===================+===================================================================
+Power            |          1            |    Power+0        | 8-bit int - The faceoff power of the troublemaker.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+IsVillain        |          1            |    Power+1        | 8-bit int - A sig_t that defines if the TM is a Villain.
+                 |                       |                   |      0x00 - Normal
+                 |                       |                   |      0xFF - Villain
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+pointValue       |          1            |    Power+2        | 8-bit int - The point bonus awarded to the player that defeats
+                 |                       |                   |              the Troublemaker.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+EndSig           |          8            |    Power+3        | 0x43454C4553544941 - End of Record Signature
+=================+=======================+===================+===================================================================
+
+For Manes        |         27            |      Variable     |
+=================+=======================+===================+===================================================================
+Colour           |          1            |      Colour+0     | 8-bit int - A sig_t that defines the colour of the card.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Power            |          1            |      Colour+1     | 8-bit int - The power shown on the "Start" side of the MC.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+TypeModifiers    |          1            |      Colour+2     | 8-bit bitvector - This is a packed set of eight bits that 
+                 |                       |                   |     represents the bitwise OR of the various flags that can apply
+                 |                       |                   |     to mane characters.
+                 |                       |                   |    Masks available:
+                 |                       |                   |      0x01 - Elder
+                 |                       |                   |      0x02 - Foal
+                 |                       |                   |      0x04 - Royalty
+                 |                       |                   |      0x08 - Reserved
+                 |                       |                   |      0x10 - Reserved
+                 |                       |                   |      0x20 - Reserved
+                 |                       |                   |      0x40 - Reserved
+                 |                       |                   |      0x80 - Reserved
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+StartFlipCond    |          4            |      Colour+3     | 32-bit int - Index in the String Table Dictionary for the condition
+                 |                       |                   |     that must be met for the Mane Character to flip from the "Start"
+                 |                       |                   |     side to the "Boosted" side.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+BoostedFlipCond  |          4            |      Colour+7     | 32-bit int - Index in the String Table Dictionary for the condition
+                 |                       |                   |     that must be met for the Mane Character to flip from the 
+                 |                       |                   |     "Boosted" side to the "Start" side.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Species          |          1            |      Colour+11    | 8-bit int - A sig_t that defines the Species of the Mane Char.
+                 |                       |                   |      0xA0 - Unicorn
+                 |                       |                   |      0xA1 - Pegasus
+                 |                       |                   |      0xA2 - Earth Pony
+                 |                       |                   |      0xA3 - Alicorn
+                 |                       |                   |      0xA4 - Zebra
+                 |                       |                   |      0xA5 - Dragon
+                 |                       |                   |      0xA6 - Critter
+                 |                       |                   |      0xA7 - Buffalo
+                 |                       |                   |      0xA8 - Reserved
+                 |                       |                   |      0xA9 - Reserved
+-----------------+-----------------------+-------------------+--------------------------------------------------------------------
+BoostedPower     |          1            |      Colour+12    | 8-bit int - The power shown on the "Boosted" side of the MC.
+-----------------+-----------------------+-------------------+--------------------------------------------------------------------
+StartHomeLimit   |          1            |      Colour+13    | 8-bit int - The Home Limit shown on the "Start" side of the MC.
+-----------------+-----------------------+-------------------+--------------------------------------------------------------------
+BoostedHomeLimit |          1            |      Colour+14    | 8-bit int - The Home Limit shone on the "Boosted" side of the MC.
+-----------------+-----------------------+-------------------+--------------------------------------------------------------------
+StartText        |          4            |      Colour+15    | 32-bit int - Index in the String Table Dictionary for any text on 
+                 |                       |                   |      the "Start" side of the card that does NOT act to flip the
+                 |                       |                   |      card over.
+-----------------+-----------------------+-------------------+--------------------------------------------------------------------
+EndSig           |          8            |      Colour+19    | 0x43454C4553544941 - End of Record Signature
+=================+=======================+===================+====================================================================
+
+For Friends      |         14            |      Variable     |
+=================+=======================+===================+====================================================================
+Colour           |          1            |      Colour+0     | 8-bit int - A sig_t that defines the colour of the card.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Power            |          1            |      Colour+1     | 8-bit int - The printed power of the Friend.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+TypeModifiers    |          1            |      Colour+2     | 8-bit bitvector - This is a packed set of eight bits that 
+                 |                       |                   |     represents the bitwise OR of the various flags that can apply
+                 |                       |                   |     to Friends.
+                 |                       |                   |    Masks available:
+                 |                       |                   |      0x01 - Elder
+                 |                       |                   |      0x02 - Foal
+                 |                       |                   |      0x04 - Royalty
+                 |                       |                   |      0x08 - Reserved
+                 |                       |                   |      0x10 - Reserved
+                 |                       |                   |      0x20 - Reserved
+                 |                       |                   |      0x40 - Reserved
+                 |                       |                   |      0x80 - Unique
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+ActionCost       |          1            |      Colour+3     | 8-bit int - The Action Cost of the Friend.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+ColourCost       |          1            |      Colour+4     | 8-bit int - The Colour Cost of the Friend.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Species          |          1            |      Colour+5     | 8-bit int - A sig_t that defines the species of the Friend.
+                 |                       |                   |      0xA0 - Unicorn
+                 |                       |                   |      0xA1 - Pegasus
+                 |                       |                   |      0xA2 - Earth Pony
+                 |                       |                   |      0xA3 - Alicorn
+                 |                       |                   |      0xA4 - Zebra
+                 |                       |                   |      0xA5 - Dragon
+                 |                       |                   |      0xA6 - Critter
+                 |                       |                   |      0xA7 - Buffalo
+                 |                       |                   |      0xA8 - Reserved
+                 |                       |                   |      0xA9 - Reserved
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+EndSig           |          8            |      Colour+6     | 0x43454C4553544941 - End of Record Signature
+=================+=======================+===================+===================================================================
+
+For Resources    |         14            |      Variable     |
+=================+=======================+===================+===================================================================
+Colour           |          1            |      Colour+0     | 8-bit int - A sig_t that defines the colour of the card.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+                 |                       |                   |      0x29 - None (Only Resourcees and Events can have no Colour)
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Power            |          1            |      Colour+1     | 8-bit int - The printed power of the Resource.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+TypeModifiers    |          1            |      Colour+2     | 8-bit bitvector - This is a packed set of eight bits that 
+                 |                       |                   |     represents the bitwise OR of the various flags that can apply
+                 |                       |                   |     to Resources.
+                 |                       |                   |    Masks available:
+                 |                       |                   |      0x01 - Location
+                 |                       |                   |      0x02 - Asset
+                 |                       |                   |      0x04 - Report
+                 |                       |                   |      0x08 - Accessory
+                 |                       |                   |      0x10 - Condition
+                 |                       |                   |      0x20 - Artifact
+                 |                       |                   |      0x40 - Reserved
+                 |                       |                   |      0x80 - Unique
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+ActionCost       |          1            |      Colour+3     | 8-bit int - The Action Cost of the Resource.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+ColourCost       |          1            |      Colour+4     | 8-bit int - The Colour Cost of the Resource.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Location         |          1            |      Colour+5     | 8-bit int - A sig_t that defines where the Resource is to be played.
+                 |                       |                   |      0x50 - Home
+                 |                       |                   |      0x51 - Friend
+                 |                       |                   |      0x52 - Opposing Friend
+                 |                       |                   |      0x53 - Troublemaker
+                 |                       |                   |      0x54 - Problem
+                 |                       |                   |      0x55 - Reserved
+                 |                       |                   |      0x56 - Mane Character
+                 |                       |                   |      0x57 - Opposing Mane Character
+                 |                       |                   |      0x58 - Reserved
+                 |                       |                   |      0x59 - Reserved
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+EndSig           |          8            |      Colour+6     | 0x43454C4553544941 - End of Record Signature
+=================+=======================+===================+===================================================================
+
+For Events       |         13            |      Variable     |
+=================+=======================+===================+===================================================================
+Colour           |          1            |      Colour+0     |  8-bit int - A sig_t that defines the colour of the Event.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+                 |                       |                   |      0x29 - None (Only Resources and Events can have no Colour)
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+Power            |          1            |      Colour+1     |  8-bit int - The printed Power of the Event.
+-----------------+-----------------------+-------------------+-------------------------------------------------------------------
+TypeModifiers    |          1            |      Colour+2     | 8-bit bitvector - This is a packed set of eight bits that 
+                 |                       |                   |     represents the bitwise OR of the various flags that can apply
+                 |                       |                   |     to Events.
+                 |                       |                   |    Masks available:
+                 |                       |                   |      0x01 - Gotcha
+                 |                       |                   |      0x02 - Showdown
+                 |                       |                   |      0x04 - Reserved
+                 |                       |                   |      0x08 - Reserved
+                 |                       |                   |      0x10 - Reserved
+                 |                       |                   |      0x20 - Reserved
+                 |                       |                   |      0x40 - Reserved
+                 |                       |                   |      0x80 - Reserved
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+ActionCost       |          1            |      Colour+3     | 8-bit int - The Action Cost of the Event.
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+ColourCost       |          1            |      Colour+4     | 8-bit int - The Colour Cost of the Event.
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+EndSig           |          8            |      Colour+5     | 0x43454C4553544941 - End of Record Signature
+=================+=======================+===================+==================================================================
+
+For Problems     |         15            |      Variable     |
+=================+=======================+===================+==================================================================
+PointBonus       |          1            |    PointBonus+0   | 8-bit int - The bonus value of the Problem
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+NeutralCC        |          1            |    PointBonus+1   | 8-bit int - The power required for the opponent to confront this
+                 |                       |                   |      Problem.
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+PrimaryColour    |          1            |    PointBonus+2   | 8-bit int - A sig_t that defines the primary (left) colour of 
+                 |                       |                   |          the Problem.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+SecondaryColour  |          1            |    PointBonus+3   | 8-bit int - A sig_t that defines the secondary (right) colour of
+                 |                       |                   |          the Problem. Note that this could be "Any", which is 
+                 |                       |                   |          actually any colour other than the primary one.
+                 |                       |                   |      0x0A - Purple
+                 |                       |                   |      0x0B - Blue
+                 |                       |                   |      0x0C - Yellow
+                 |                       |                   |      0x0D - Pink
+                 |                       |                   |      0x0E - White
+                 |                       |                   |      0x0F - Orange
+                 |                       |                   |      0x28 - Any
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+PCCC             |          1            |    PointBonus+4   | 8-bit int - The confrontation cost associated with the primary
+                 |                       |                   |          colour of the Problem.
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+SCCC             |          1            |    PointBonus+5   | 8-bit int - The confrontation cost associated with the secondary
+                 |                       |                   |          colour of the Problem.
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+IsStarting       |          1            |    PointBonus+6   | 8-bit int - A sig_t that defines if the Problem is an allowed
+                 |                       |                   |          starting Problem.
+                 |                       |                   |      0x00 - Normal
+                 |                       |                   |      0xFF - Starting
+-----------------+-----------------------+-------------------+------------------------------------------------------------------
+EndSig           |          8            |    PointBonus+7   | 0x43454C4553544941 - End of Record Signature.
+=================+=======================+===================+==================================================================
