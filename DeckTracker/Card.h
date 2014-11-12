@@ -1,91 +1,75 @@
 
 #ifndef _CARD_
 #define _CARD_
+
+#include "DeckTracker.h"
+
 #include <string>
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-// Sick of typing "unsigned int" on all of my loops.
-typedef unsigned int iter_t;
-
-typedef enum {
-	COLOUR_INVALID,
-	COLOUR_NONE,
-	COLOUR_PURPLE,
-	COLOUR_WHITE,
-	COLOUR_YELLOW,
-	COLOUR_ORANGE,
-	COLOUR_BLUE,
-	COLOUR_PINK
-} Colour;
-
-typedef enum {
-	RARITY_INVALID,
-	RARITY_COMMON,
-	RARITY_UNCOMMON,
-	RARITY_RARE,
-	RARITY_ULTRA_RARE,
-	RARITY_FIXED,
-	RARITY_FOIL,
-	RARITY_PROMO
-} Rarity;
+extern SigMap rarityMap;
+extern SigMap colourMap;
 
 class Card {
 
-private:
-	int frequency;
-	string name;
-	Rarity rarity;
-	vector<string> specialText;
+    // Allowing the file interface class direct access makes reading and writing to files a lot easier.
+    friend class ManifestInterface;
 
-	// This is a state variable used to track the progress of building a card
-	// Every class will do this in a similar way, thus they all need this variable.
-	int filledFields;
+private:
+    int frequency;
+    string name;
+    sig_t rarity;
+    vector<string> specialText;
+
+    // This is a state variable used to track the progress of building a card
+    // Every class will do this in a similar way, thus they all need this variable.
+    int filledFields;
 
 public:
-	Card();
-	Card(string name);
-	Card(string name, Rarity rarity, vector<string> text);
-	
-	// Abstract Class
-	virtual void printStats() = 0;
-	virtual bool addFields(string inputToAdd) = 0;
-	virtual bool isCardComplete() = 0;
-    virtual string getManifestString() = 0;
+    Card();
+    Card(string name);
+    Card(string name, sig_t rarity, vector<string> text);
+    
+    // Abstract Class
+    virtual void printStats() = 0;
+    virtual bool addFields(string inputToAdd) = 0;
+    virtual bool isCardComplete() = 0;
+    //virtual string makeManifestString() = 0;
     // virtual Card* parseManifestEntry(string entry) = 0;
-	
-	virtual ~Card();
+    
+    virtual ~Card();
 
-	bool operator==(Card* toCompare);
+    bool operator==(Card* toCompare);
 
-	void incrementFrequency();
-	void decrementFrequency();
+    void incrementFrequency();
+    void decrementFrequency();
+
+    string getTextAt(int i);
 
 protected:
-	string accessName();
-	Rarity accessRarity();
-	vector<string> accessSpecialText();
-	
-	bool modifyName(string newName);
-	bool modifyRarity(string newRarity);
-	void modifySpecialText(vector<string> newText);
-	void printSpecialText();
-	void pushSpecialText(string textToAdd);
-	
-	const int accessFieldsAdded() const;
-	void incrementAddedFields();
+    string accessName();
+    sig_t accessRarity();
+    vector<string> accessSpecialText();
+    
+    bool modifyName(string newName);
+    bool modifyRarity(string newRarity);
+    void modifySpecialText(vector<string> newText);
+    void printSpecialText();
+    void pushSpecialText(string textToAdd);
+    
+    const int accessFieldsAdded() const;
+    void incrementAddedFields();
 
-	const int accessFrequency() const;
+    const int accessFrequency() const;
 
-	static Colour stringToColour(string toConvert);
-	static string colourToString(Colour toConvert);
-	static void printAcceptableColours(bool allowNone);
+    static sig_t stringToColour(string toConvert);
+    static void printAcceptableColours(bool allowNone);
 
-	static Rarity stringToRarity(string toConvert);
-	static string rarityToString(Rarity toConvert);
-	static void printAcceptableRarities();
+    static sig_t stringToRarity(string toConvert);
+    static void printAcceptableRarities();
 };
 
 #endif // ndef _CARD_

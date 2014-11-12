@@ -1,6 +1,8 @@
 #ifndef _MAIN_
 #define _MAIN_
 
+#include "DeckTracker.h"
+
 #include "Friend.h"
 #include "Resource.h"
 #include "Event.h"
@@ -10,6 +12,7 @@
 #include "CardSet.h"
 
 #include "StringUtility.h"
+#include "ManifestInterface.h"
 
 #include <iostream>
 #include <sstream>
@@ -20,15 +23,16 @@
 
 using namespace std;
 
+
 typedef enum {
 
-	MODE_NOT_SET,
-	MODE_TM,
-	MODE_MC,
-	MODE_FRIEND,
-	MODE_RESOURCE,
-	MODE_EVENT,
-	MODE_PROBLEM
+    MODE_NOT_SET,
+    MODE_TM,
+    MODE_MC,
+    MODE_FRIEND,
+    MODE_RESOURCE,
+    MODE_EVENT,
+    MODE_PROBLEM
 
 } Mode;
 

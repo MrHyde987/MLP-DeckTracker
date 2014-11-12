@@ -1,49 +1,43 @@
 #ifndef _RESOURCE_
 #define _RESOURCE_
+#include "DeckTracker.h"
 #include "FRE.h"
 
-typedef enum {
-
-	LOCATION_INVALID,
-	LOCATION_HOME,
-	LOCATION_FRIEND,
-	LOCATION_OPPOSING_FRIEND,
-	LOCATION_TM,
-	LOCATION_PROBLEM,
-	LOCATION_MC,
-	LOCATION_OPPOSING_MC
-
-} Location;
+extern SigMap locationMap;
 
 class Resource : public FRE {
 
-private:
-	Location location;
-	
-	const static int NUM_FIELDS = 8;
+    friend class ManifestInterface;
 
-	static Location stringToLocation(string toConvert);
-	static string locationToString(Location toConvert);
-	static void printAcceptableLocations();
+private:
+    sig_t location;
+    
+    const static int NUM_FIELDS = 8;
+
+    static sig_t stringToLocation(string toConvert);
+    static void printAcceptableLocations();
 
 public:
-	Resource();
-	Resource(string name);
-	Resource(
-		Location location,
-		int actionCost,
-		int developmentCost,
-		Colour colour,
-		int power,
-		vector<string> typeModifiers,
-		string name,
-		Rarity rarity,
-		vector<string> specialText);
+    Resource();
+    Resource(string name);
+    Resource(
+        sig_t location,
+        int actionCost,
+        int developmentCost,
+        sig_t colour,
+        int power,
+        uint8_t typeModifiers,
+        string name,
+        sig_t rarity,
+        vector<string> specialText);
 
-	~Resource();
+    ~Resource();
 
-	void printStats();
-	bool addFields(string inputToAdd);
-	bool isCardComplete();
+    void printStats();
+    bool addFields(string inputToAdd);
+    bool isCardComplete();
+
+    bool modifyTypeModifiers(string newModifiers);
+    void printTypeModifiers();
 };
 #endif // _RESOURCE_
